@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:exercise_tracker_doctor/models/Patient.dart';
 import 'package:exercise_tracker_doctor/constants.dart';
+import 'package:exercise_tracker_doctor/screens/main/components/patient_card.dart';
 
 class ListOfPatients extends StatefulWidget {
   const ListOfPatients({
@@ -45,11 +46,25 @@ class _ListOfPatientsState extends State<ListOfPatients> {
                           hintText: "Search",
                           fillColor: kBgLightColor,
                           filled: true,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                            borderSide: BorderSide.none
+                          )
                         )
                       )
                     )
                   ],
                 )
+              ),
+              SizedBox(height: kDefaultPadding), // SizedBox
+              Expanded(
+                  child: ListView.builder(
+                    itemCount: patients==null ? 0: patients.length,
+                    itemBuilder: (context, index) => PatientCard(
+                        patient: patients[index],
+                        press:(){}
+                    )
+                  )
               )
             ],
           )
