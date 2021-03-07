@@ -38,7 +38,7 @@ List demo_data = [
     "image": "assets/images/img.png",
     "operation": "Knee Operation",
     "isDoingExerciseOnTime": true,
-    "criticalStatus": false,
+    "criticalStatus": true,
     "totalTreatmentLength": 30,
     "treatmentDay": 13
   },
@@ -56,7 +56,7 @@ List demo_data = [
     "image": "assets/images/img.png",
     "operation": "Brain Operation",
     "isDoingExerciseOnTime": false,
-    "criticalStatus": false,
+    "criticalStatus": true,
     "totalTreatmentLength": 30,
     "treatmentDay": 13
   },
@@ -74,7 +74,7 @@ List demo_data = [
     "image": "assets/images/img.png",
     "operation": "Brain Operation",
     "isDoingExerciseOnTime": false,
-    "criticalStatus": false,
+    "criticalStatus": true,
     "totalTreatmentLength": 45,
     "treatmentDay": 23
   },
@@ -101,7 +101,7 @@ List demo_data = [
     "image": "assets/images/img.png",
     "operation": "Brain Operation",
     "isDoingExerciseOnTime": false,
-    "criticalStatus": false,
+    "criticalStatus": true,
     "totalTreatmentLength": 32,
     "treatmentDay": 14
   },
@@ -110,7 +110,7 @@ List demo_data = [
     "image": "assets/images/img.png",
     "operation": "Brain Operation",
     "isDoingExerciseOnTime": false,
-    "criticalStatus": false,
+    "criticalStatus": true,
     "totalTreatmentLength": 38,
     "treatmentDay": 9
   },

@@ -85,6 +85,15 @@ class PatientCard extends StatelessWidget {
                             percent: patient.treatmentDay/patient.totalTreatmentLength,
                             center: new Text("${(100*(patient.treatmentDay/patient.totalTreatmentLength)).round()}%", style: TextStyle(fontSize: 10)),
                             progressColor: Colors.green,
+                          ),
+                          SizedBox(width: kDefaultPadding,),
+                          Icon(patient.criticalStatus?
+                            Icons.clear:
+                            Icons.check,
+                            color: patient.criticalStatus?
+                            Colors.red:
+                            Colors.green,
+                            size: 32
                           )
                         ]
                     )
