@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:exercise_tracker_doctor/screens/main/components/list_of_patients.dart';
 
 class MainScreen extends StatelessWidget {
   @override
@@ -8,7 +9,7 @@ class MainScreen extends StatelessWidget {
     return Scaffold (
         // TODO: Add List of Patients Here
         body: Center(
-          child: Text("Patient List")
+          child: ListOfPatients()
       )
     );
   }
