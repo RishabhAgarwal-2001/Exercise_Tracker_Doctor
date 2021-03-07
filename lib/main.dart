@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:exercise_tracker_doctor/screens/main/main_screen.dart';
 
 void main() {
   runApp(MyApp());
@@ -12,11 +13,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Exercise Tracker',
       theme: ThemeData(),
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Exercise Tracker (Doctor)')
-        ),
-      )
+      home: MainScreen(),
     );
   }
 }
