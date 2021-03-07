@@ -6,8 +6,9 @@ class MainScreen extends StatelessWidget {
     // It gives us the width and height of the Screen
     Size _size = MediaQuery.of(context).size;
     return Scaffold (
-      body: Center(
-          child: Text("Main Screen")
+        // TODO: Add List of Patients Here
+        body: Center(
+          child: Text("Patient List")
       )
     );
   }
