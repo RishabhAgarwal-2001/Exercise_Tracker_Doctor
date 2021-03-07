@@ -34,12 +34,102 @@ List<Patient> patients = List.generate(
 
 List demo_data = [
   {
-    "name": "Patient 1",
+    "name": "Harshad Mehta",
     "image": "assets/images/img.png",
-    "operation": "XYZ",
+    "operation": "Knee Operation",
     "isDoingExerciseOnTime": true,
     "criticalStatus": false,
     "totalTreatmentLength": 30,
     "treatmentDay": 13
+  },
+  {
+    "name": "Rajeev Jain",
+    "image": "assets/images/img.png",
+    "operation": "Brain Operation",
+    "isDoingExerciseOnTime": false,
+    "criticalStatus": false,
+    "totalTreatmentLength": 30,
+    "treatmentDay": 13
+  },
+  {
+    "name": "Rajeev Jain",
+    "image": "assets/images/img.png",
+    "operation": "Brain Operation",
+    "isDoingExerciseOnTime": false,
+    "criticalStatus": false,
+    "totalTreatmentLength": 30,
+    "treatmentDay": 13
+  },
+  {
+    "name": "Rajeev Jain",
+    "image": "assets/images/img.png",
+    "operation": "Brain Operation",
+    "isDoingExerciseOnTime": false,
+    "criticalStatus": false,
+    "totalTreatmentLength": 40,
+    "treatmentDay": 25
+  },
+  {
+    "name": "Rajeev Jain",
+    "image": "assets/images/img.png",
+    "operation": "Brain Operation",
+    "isDoingExerciseOnTime": false,
+    "criticalStatus": false,
+    "totalTreatmentLength": 45,
+    "treatmentDay": 23
+  },
+  {
+    "name": "Kavita",
+    "image": "assets/images/img.png",
+    "operation": "Wrist Operation",
+    "isDoingExerciseOnTime": true,
+    "criticalStatus": false,
+    "totalTreatmentLength": 20,
+    "treatmentDay": 13
+  },
+  {
+    "name": "Mike Jain",
+    "image": "assets/images/img.png",
+    "operation": "Boulder Operation",
+    "isDoingExerciseOnTime": true,
+    "criticalStatus": false,
+    "totalTreatmentLength": 69,
+    "treatmentDay": 1
+  },
+  {
+    "name": "Jack",
+    "image": "assets/images/img.png",
+    "operation": "Brain Operation",
+    "isDoingExerciseOnTime": false,
+    "criticalStatus": false,
+    "totalTreatmentLength": 32,
+    "treatmentDay": 14
+  },
+  {
+    "name": "Washington",
+    "image": "assets/images/img.png",
+    "operation": "Brain Operation",
+    "isDoingExerciseOnTime": false,
+    "criticalStatus": false,
+    "totalTreatmentLength": 38,
+    "treatmentDay": 9
+  },
+  {
+    "name": "Ritik Maheshwari",
+    "image": "assets/images/img.png",
+    "operation": "Shoulder Operation",
+    "isDoingExerciseOnTime": true,
+    "criticalStatus": false,
+    "totalTreatmentLength": 32,
+    "treatmentDay": 19
+  },
+  {
+    "name": "Harish Yadav",
+    "image": "assets/images/img.png",
+    "operation": "Kidney Operation",
+    "isDoingExerciseOnTime": false,
+    "criticalStatus": false,
+    "totalTreatmentLength": 29,
+    "treatmentDay": 28
   }
 ];
