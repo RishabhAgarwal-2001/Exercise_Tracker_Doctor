@@ -3,6 +3,7 @@ import 'package:exercise_tracker_doctor/models/Patient.dart';
 import 'package:exercise_tracker_doctor/constants.dart';
 import 'package:exercise_tracker_doctor/screens/main/components/patient_card.dart';
 import 'dart:async';
+import 'package:exercise_tracker_doctor/screens/main/components/side_menu.dart';
 
 class Debouncer {
   final int milliseconds;
@@ -44,7 +45,7 @@ class _ListOfPatientsState extends State<ListOfPatients> {
       drawer: ConstrainedBox(
         constraints: BoxConstraints(maxWidth: 250),
         // TODO: Add Drawer Here
-        child: Text("Drawer")
+        child: SideMenu()
       ),
       body: Container(
         color: kBgDarkColor,
