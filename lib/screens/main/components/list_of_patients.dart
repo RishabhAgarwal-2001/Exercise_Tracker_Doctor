@@ -33,8 +33,10 @@ class _ListOfPatientsState extends State<ListOfPatients> {
   final _debouncer = Debouncer(milliseconds: 500);
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   List<Patient> _filteredPatients = List();
+  int filterOption = 1;
 
   void applyFilter(int filterType) {
+    filterOption = filterType;
     if(filterType==1) {
       _debouncer.run(
               () {
@@ -118,7 +120,7 @@ class _ListOfPatientsState extends State<ListOfPatients> {
       drawer: ConstrainedBox(
         constraints: BoxConstraints(maxWidth: 250),
         // TODO: Add Drawer Here
-        child: SideMenu(notifyParent: applyFilter,)
+        child: SideMenu(notifyParent: applyFilter, filterActive: filterOption,)
       ),
       body: Container(
         color: kBgDarkColor,
