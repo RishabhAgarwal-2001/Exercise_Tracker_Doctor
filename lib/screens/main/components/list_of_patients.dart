@@ -35,7 +35,75 @@ class _ListOfPatientsState extends State<ListOfPatients> {
   List<Patient> _filteredPatients = List();
 
   void applyFilter(int filterType) {
-    print("Filter of Type ${filterType} is pressed \n");
+    if(filterType==1) {
+      _debouncer.run(
+              () {
+            setState((){
+              _filteredPatients = patients;
+              debugPrint("Showing All Patients");
+            });
+          }
+      );
+    }
+    else if(filterType==2) {
+      _debouncer.run(
+              () {
+            setState((){
+              _filteredPatients = patients.where(
+                      (p) => (
+                      p.isDoingExerciseOnTime
+                  )
+              ).toList();
+              debugPrint("Showing Patients which are on schedule");
+            });
+          }
+      );
+    }
+    else if(filterType==3) {
+      _debouncer.run(
+              () {
+            setState((){
+              _filteredPatients = patients.where(
+                      (p) => (
+                      !(p.isDoingExerciseOnTime)
+                  )
+              ).toList();
+              debugPrint("Patients Not Doing Exercise on Time");
+            });
+          }
+      );
+    }
+    else if(filterType==4) {
+      _debouncer.run(
+              () {
+            setState((){
+              _filteredPatients = patients.where(
+                      (p) => (
+                      p.criticalStatus
+                  )
+              ).toList();
+              debugPrint("Patients with Critical Status");
+            });
+          }
+      );
+    }
+    else if(filterType==5) {
+      _debouncer.run(
+              () {
+            setState((){
+              _filteredPatients = patients.where(
+                      (p) => (
+                      p.treatmentDay==p.totalTreatmentLength
+                  )
+              ).toList();
+              debugPrint("Patients Who Completed the Treatment");
+            });
+          }
+      );
+    }
+    else {
+      debugPrint("Invalid Option Found");
+    }
   }
 
   @override
