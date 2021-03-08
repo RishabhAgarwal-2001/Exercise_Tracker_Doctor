@@ -23,7 +23,6 @@ class SideMenu extends StatelessWidget {
               currentAccountPicture: CircleAvatar(
                 backgroundImage: AssetImage('assets/Images/vk.png'),
               ),
-
               // TODO: Implement this to show details of the Doctor
               onDetailsPressed: (){},
 
