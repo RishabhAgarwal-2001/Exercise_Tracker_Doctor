@@ -1,6 +1,7 @@
 import 'package:exercise_tracker_doctor/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:exercise_tracker_doctor/constants.dart';
+import 'package:exercise_tracker_doctor/screens/profile/profile.dart';
 
 class SideMenu extends StatelessWidget {
 
@@ -21,7 +22,7 @@ class SideMenu extends StatelessWidget {
               accountName: Text('Dr. Roberto Aleydon'),
               accountEmail: Text('aleydon@gmail.com'),
               currentAccountPicture: CircleAvatar(
-                backgroundImage: AssetImage('assets/Images/vk.png'),
+                backgroundImage: AssetImage('assets/Images/doctor.jpg'),
               ),
               // TODO: Implement this to show details of the Doctor
               onDetailsPressed: (){},
@@ -31,7 +32,15 @@ class SideMenu extends StatelessWidget {
             ListTile(
               title: Text('Profile'),
               leading: Icon(Icons.person),
-              onLongPress: (){},
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        Profile(),
+                  ),
+                );
+              },
             ),
 
 
