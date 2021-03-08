@@ -4,8 +4,10 @@ import 'package:exercise_tracker_doctor/constants.dart';
 
 class SideMenu extends StatelessWidget {
 
+  final Function(int) notifyParent;
+
   const SideMenu({
-    Key key,
+    Key key, @required this.notifyParent
   }) : super(key: key);
 
   @override
@@ -48,30 +50,47 @@ class SideMenu extends StatelessWidget {
             ListTile(
               title: Text('All Patients'),
               leading: Icon(Icons.person),
+              onTap: () {
+                Navigator.of(context).pop();
+                notifyParent(1);
+              }
             ),
 
             ListTile(
               title: Text('On Schedule'),
               leading: Icon(Icons.schedule),
+              onTap: () {
+                Navigator.of(context).pop();
+                notifyParent(2);
+              }
             ),
 
             ListTile(
               title: Text('Off Schedule'),
               leading: Icon(Icons.assignment_late),
-              onLongPress: (){},
+              onTap: () {
+                Navigator.of(context).pop();
+                notifyParent(3);
+              }
             ),
 
 
             ListTile(
               title: Text('Critical Status'),
               leading: Icon(Icons.clear),
-              onLongPress: (){},
+              onTap: () {
+                Navigator.of(context).pop();
+                notifyParent(4);
+              }
             ),
 
             ListTile(
               title: Text('Treatment Completed'),
               leading: Icon(Icons.done_all),
-              onLongPress: (){},
+              onTap: () {
+                Navigator.of(context).pop();
+                notifyParent(5);
+              }
             ),
 
 

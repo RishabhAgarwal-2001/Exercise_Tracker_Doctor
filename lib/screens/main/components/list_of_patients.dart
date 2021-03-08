@@ -33,6 +33,11 @@ class _ListOfPatientsState extends State<ListOfPatients> {
   final _debouncer = Debouncer(milliseconds: 500);
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   List<Patient> _filteredPatients = List();
+
+  void applyFilter(int filterType) {
+    print("Filter of Type ${filterType} is pressed \n");
+  }
+
   @override
   void initState() {
     super.initState();
@@ -45,7 +50,7 @@ class _ListOfPatientsState extends State<ListOfPatients> {
       drawer: ConstrainedBox(
         constraints: BoxConstraints(maxWidth: 250),
         // TODO: Add Drawer Here
-        child: SideMenu()
+        child: SideMenu(notifyParent: applyFilter,)
       ),
       body: Container(
         color: kBgDarkColor,
