@@ -35,7 +35,7 @@ List<Patient> patients = List.generate(
 List demo_data = [
   {
     "name": "Harshad Mehta",
-    "image": "assets/images/img.png",
+    "image": "assets/Images/person1.jpg",
     "operation": "Knee Operation",
     "isDoingExerciseOnTime": true,
     "criticalStatus": true,
@@ -44,7 +44,7 @@ List demo_data = [
   },
   {
     "name": "Rajeev Jain",
-    "image": "assets/images/img.png",
+    "image": "assets/Images/person2.jpg",
     "operation": "Brain Operation",
     "isDoingExerciseOnTime": false,
     "criticalStatus": false,
@@ -53,7 +53,7 @@ List demo_data = [
   },
   {
     "name": "Rajeev Jain",
-    "image": "assets/images/img.png",
+    "image": "assets/Images/person3.jpg",
     "operation": "Brain Operation",
     "isDoingExerciseOnTime": false,
     "criticalStatus": true,
@@ -62,7 +62,7 @@ List demo_data = [
   },
   {
     "name": "Rajeev Jain",
-    "image": "assets/images/img.png",
+    "image": "assets/Images/person4.jpg",
     "operation": "Brain Operation",
     "isDoingExerciseOnTime": false,
     "criticalStatus": false,
@@ -71,7 +71,7 @@ List demo_data = [
   },
   {
     "name": "Rajeev Jain",
-    "image": "assets/images/img.png",
+    "image": "assets/Images/person5.jpg",
     "operation": "Brain Operation",
     "isDoingExerciseOnTime": false,
     "criticalStatus": true,
@@ -80,7 +80,7 @@ List demo_data = [
   },
   {
     "name": "Kavita",
-    "image": "assets/images/img.png",
+    "image": "assets/Images/person6.jpg",
     "operation": "Wrist Operation",
     "isDoingExerciseOnTime": true,
     "criticalStatus": false,
@@ -89,7 +89,7 @@ List demo_data = [
   },
   {
     "name": "Mike Jain",
-    "image": "assets/images/img.png",
+    "image": "assets/Images/person7.png",
     "operation": "Boulder Operation",
     "isDoingExerciseOnTime": true,
     "criticalStatus": false,
@@ -98,7 +98,7 @@ List demo_data = [
   },
   {
     "name": "Jack",
-    "image": "assets/images/img.png",
+    "image": "assets/Images/person8.png",
     "operation": "Brain Operation",
     "isDoingExerciseOnTime": false,
     "criticalStatus": true,
@@ -107,7 +107,7 @@ List demo_data = [
   },
   {
     "name": "Washington",
-    "image": "assets/images/img.png",
+    "image": "assets/Images/person9.png",
     "operation": "Brain Operation",
     "isDoingExerciseOnTime": false,
     "criticalStatus": true,
@@ -116,7 +116,7 @@ List demo_data = [
   },
   {
     "name": "Ritik Maheshwari",
-    "image": "assets/images/img.png",
+    "image": "assets/Images/img.png",
     "operation": "Shoulder Operation",
     "isDoingExerciseOnTime": true,
     "criticalStatus": false,
@@ -125,7 +125,7 @@ List demo_data = [
   },
   {
     "name": "Harish Yadav",
-    "image": "assets/images/img.png",
+    "image": "assets/Images/img.png",
     "operation": "Kidney Operation",
     "isDoingExerciseOnTime": false,
     "criticalStatus": false,

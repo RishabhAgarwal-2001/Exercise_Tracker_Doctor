@@ -4,6 +4,7 @@ import 'package:exercise_tracker_doctor/constants.dart';
 import 'package:exercise_tracker_doctor/screens/main/components/patient_card.dart';
 import 'dart:async';
 import 'package:exercise_tracker_doctor/screens/main/components/side_menu.dart';
+import 'package:exercise_tracker_doctor/screens/patient/patient.dart';
 
 // TODO (1): Add Shimmer While Loading
 
@@ -176,7 +177,15 @@ class _ListOfPatientsState extends State<ListOfPatients> {
                     itemCount: _filteredPatients==null ? 0: _filteredPatients.length,
                     itemBuilder: (context, index) => PatientCard(
                         patient: _filteredPatients[index],
-                        press:(){}
+                        press:(){
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  DashboardOnePage(patient: patients[index]),
+                            ),
+                          );
+                        }
                     )
                   )
               )
