@@ -25,7 +25,7 @@ class SideMenu extends StatelessWidget {
                 backgroundImage: AssetImage('assets/Images/doctor.jpg'),
               ),
               // TODO: Implement this to show details of the Doctor
-              onDetailsPressed: (){},
+              // onDetailsPressed: (){},
 
             ),
 
@@ -37,7 +37,7 @@ class SideMenu extends StatelessWidget {
                   context,
                   MaterialPageRoute(
                     builder: (context) =>
-                        Profile(),
+                        DashboardThreePage(),
                   ),
                 );
               },

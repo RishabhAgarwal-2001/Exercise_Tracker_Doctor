@@ -5,6 +5,8 @@ import 'package:exercise_tracker_doctor/screens/main/components/patient_card.dar
 import 'dart:async';
 import 'package:exercise_tracker_doctor/screens/main/components/side_menu.dart';
 
+// TODO (1): Add Shimmer While Loading
+
 class Debouncer {
   final int milliseconds;
   VoidCallback action;
