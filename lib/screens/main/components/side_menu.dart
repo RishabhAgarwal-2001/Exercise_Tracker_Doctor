@@ -2,6 +2,7 @@ import 'package:exercise_tracker_doctor/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:exercise_tracker_doctor/constants.dart';
 import 'package:exercise_tracker_doctor/screens/profile/profile.dart';
+import 'package:exercise_tracker_doctor/services/authServices/FirebaseUser.dart';
 
 class SideMenu extends StatelessWidget {
 
@@ -123,9 +124,11 @@ class SideMenu extends StatelessWidget {
 
 
             ListTile(
-              title: Text('Support'),
-              leading: Icon(Icons.report_problem),
-              onLongPress: (){},
+              title: Text('Logout'),
+              leading: Icon(Icons.logout),
+              onTap: () async {
+                await FirebaseSignInService().signOut(context);
+              },
             ),
 
 
