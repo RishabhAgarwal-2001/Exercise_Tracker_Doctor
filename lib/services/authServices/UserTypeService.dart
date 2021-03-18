@@ -111,6 +111,7 @@ class UserTypeService{
     if(response.statusCode == 200){
       setUserRegistered(200);
     }
+    print("Response Body ${response.body}");
     await setJWTToken(json.decode(response.body)["token"]);
     print(response.statusCode);
     return response.statusCode;
@@ -121,6 +122,7 @@ class UserTypeService{
 
   }
   Future<int> registerDoctor(String firstName, String lastName,String department,String designation,String hospital)async{
+    print("I am here");
     await checkUserType();
     if(userType==-1) throw Error();
 
@@ -134,12 +136,16 @@ class UserTypeService{
       "first_name" : firstName,
       "last_name" : lastName
     };
+    Map<String, String> requestHeaders = {
+      'x-access-token': jwtToken
+    };
     print("sending req");
     var response;
     try{
       response = await http.post(
         registerAPI[0],
         body: requestBody,
+        headers: requestHeaders
       );
     }
     catch(e){
@@ -173,12 +179,16 @@ class UserTypeService{
       "first_name" : firstName,
       "last_name" : lastName
     };
+    Map<String, String> requestHeaders = {
+      'x-access-token': jwtToken
+    };
     print("sending req");
     var response;
     try{
       response = await http.post(
         registerAPI[1],
         body: requestBody,
+        headers: requestHeaders
       );
     }
     catch(e){

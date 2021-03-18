@@ -57,6 +57,7 @@ class _RegisterPatientRelativeState extends State<RegisterPatientRelative> {
     setState(() {
       isLoading = true;
     });
+    print("Line Number 60");
     int statusCode = await userService.registerDoctor(_userNameSecond.text, _userNameSecond.text, _department.text, _designation.text,_hospital.text);
     successPushPage(statusCode);
   }

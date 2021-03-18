@@ -129,6 +129,7 @@ class _OtpVerificationState extends State<OtpVerification> {
   }
 
   _verificationComplete(AuthCredential authCredential, BuildContext context) {
+    print("Inside Verification Completed");
     // print("insidesddsddfsfsfsfsfs" + isLoading.toString());
     setState(() {
       isLoading = true;
@@ -142,11 +143,11 @@ class _OtpVerificationState extends State<OtpVerification> {
       });
 
       IdTokenResult id = await authResult.user.getIdToken();
-      print(id);
-      print(authResult.user.uid);
+      print("id = ${id}");
+      print("authResult.user.uid = ${authResult.user.uid}");
       final snackBar = SnackBar(content: Text("Success!!! UUID is: " + authResult.user.uid));
 
-      print("trying");
+      print("trying1");
       statusCode = await userService.setRole(authResult.user,widget.mobileNumber.trim());
 
       //Scaffold.of(context).showSnackBar(snackBar);
@@ -168,7 +169,8 @@ class _OtpVerificationState extends State<OtpVerification> {
 
   _smsCodeSent(String verificationId, List<int> code) {
     // set the verification code so that we can use it to log the user in
-    print(verificationId);
+    print("verificationId => ${verificationId}");
+    print("code => ${code}");
     setState(() {
       _codeSent = true;
       startTimer();
@@ -178,6 +180,8 @@ class _OtpVerificationState extends State<OtpVerification> {
   }
 
   _verificationFailed(AuthException authException, BuildContext context) {
+    print(authException.code);
+    print(authException.message);
     isLoading = false;
     final snackBar = SnackBar(content: Text("Login Failed Please Try Again"));
     //Scaffold.of(context).showSnackBar(snackBar);
