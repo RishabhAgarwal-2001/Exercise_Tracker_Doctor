@@ -1,3 +1,4 @@
+import 'package:exercise_tracker_doctor/services/authServices/UserTypeService.dart';
 import 'package:flutter/material.dart';
 import 'package:exercise_tracker_doctor/models/Patient.dart';
 import 'package:exercise_tracker_doctor/constants.dart';
@@ -37,6 +38,8 @@ class _ListOfPatientsState extends State<ListOfPatients> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   List<Patient> _filteredPatients = List();
   int filterOption = 1;
+  bool isLoading;
+  UserTypeService userService;
 
   void applyFilter(int filterType) {
     filterOption = filterType;
@@ -111,10 +114,28 @@ class _ListOfPatientsState extends State<ListOfPatients> {
     }
   }
 
+  Future<void> _getPatients() async {
+    setState(() {
+      isLoading = true;
+    });
+    String response = await userService.getPatients();
+    print("response => ${response}");
+    setState(() {
+      isLoading = false;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
+    isLoading = false;
     _filteredPatients = patients;
+    userService = UserTypeService();
+    _getPatients().catchError((e){
+      setState(() {
+        isLoading = false;
+      });
+    });
   }
   @override
   Widget build(BuildContext context) {
@@ -125,73 +146,82 @@ class _ListOfPatientsState extends State<ListOfPatients> {
         // TODO: Add Drawer Here
         child: SideMenu(notifyParent: applyFilter, filterActive: filterOption,)
       ),
-      body: Container(
-        color: kBgDarkColor,
-        child: SafeArea(
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: kDefaultPadding/2),
-                child: Row(
-                  children: [
-                    IconButton(
-                        icon: Icon(Icons.menu),
-                        onPressed: () {
-                          _scaffoldKey.currentState.openDrawer();
-                        }
-                    ),
-                    SizedBox(width: 5,),
-                    Expanded(
-                      child: TextField(
-                        onChanged: (value) {
-                          _debouncer.run(
-                              () {
-                                setState((){
-                                  _filteredPatients = patients.where(
-                                          (p) => (
-                                          p.name.toLowerCase().contains(value.toLowerCase())
+      body:Stack(
+        children: <Widget>[
+          Container(
+              color: kBgDarkColor,
+              child: SafeArea(
+                  child: Column(
+                    children: [
+                      Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: kDefaultPadding/2),
+                          child: Row(
+                            children: [
+                              IconButton(
+                                  icon: Icon(Icons.menu),
+                                  onPressed: () {
+                                    _scaffoldKey.currentState.openDrawer();
+                                  }
+                              ),
+                              SizedBox(width: 5,),
+                              Expanded(
+                                  child: TextField(
+                                      onChanged: (value) {
+                                        _debouncer.run(
+                                                () {
+                                              setState((){
+                                                _filteredPatients = patients.where(
+                                                        (p) => (
+                                                        p.name.toLowerCase().contains(value.toLowerCase())
+                                                    )
+                                                ).toList();
+                                                print(_filteredPatients);
+                                              });
+                                            }
+                                        );
+                                      },
+                                      decoration: InputDecoration(
+                                          hintText: "Search",
+                                          fillColor: kBgLightColor,
+                                          filled: true,
+                                          border: OutlineInputBorder(
+                                              borderRadius: BorderRadius.all(Radius.circular(10)),
+                                              borderSide: BorderSide.none
+                                          )
                                       )
-                                  ).toList();
-                                  print(_filteredPatients);
-                                });
-                              }
-                          );
-                        },
-                        decoration: InputDecoration(
-                          hintText: "Search",
-                          fillColor: kBgLightColor,
-                          filled: true,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(10)),
-                            borderSide: BorderSide.none
+                                  )
+                              )
+                            ],
                           )
-                        )
+                      ),
+                      SizedBox(height: kDefaultPadding), // SizedBox
+                      Expanded(
+                          child: ListView.builder(
+                              itemCount: _filteredPatients==null ? 0: _filteredPatients.length,
+                              itemBuilder: (context, index) => PatientCard(
+                                  patient: _filteredPatients[index],
+                                  press:(){
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            DashboardOnePage(patient: patients[index]),
+                                      ),
+                                    );
+                                  }
+                              )
+                          )
                       )
-                    )
-                  ],
-                )
-              ),
-              SizedBox(height: kDefaultPadding), // SizedBox
-              Expanded(
-                  child: ListView.builder(
-                    itemCount: _filteredPatients==null ? 0: _filteredPatients.length,
-                    itemBuilder: (context, index) => PatientCard(
-                        patient: _filteredPatients[index],
-                        press:(){
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  DashboardOnePage(patient: patients[index]),
-                            ),
-                          );
-                        }
-                    )
+                    ],
                   )
               )
-            ],
-          )
-        )
+          ),
+          isLoading == true? Container(
+              color: Colors.black.withOpacity(0.5),
+              height: MediaQuery.of(context).size.height,
+              width: MediaQuery.of(context).size.width,
+              child: Center(child: CircularProgressIndicator(),)):Container(),
+        ],
       )
     );
   }

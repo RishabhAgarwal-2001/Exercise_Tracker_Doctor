@@ -33,6 +33,9 @@ class UserTypeService{
     baseUrl+"/api/v1/register/doctor",
     baseUrl+"/api/v1/register/staff"
   ];
+  List<String> patientAPI = [
+    baseUrl+"/api/v1/doctor/get_all_patients"
+  ];
 
   Future<void> setUserRegistered(int status)async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -208,6 +211,38 @@ class UserTypeService{
 
   }
 
+  Future<String> getPatients() async{
+    await checkUserType();
+    if(userType==-1) throw Error();
+
+    await checkJWTToken();
+
+    Map<String, String> requestBody = {
+      "x-access-token" : jwtToken,
+    };
+    Map<String, String> requestHeaders = {
+      'x-access-token': jwtToken
+    };
+    var response;
+    try{
+      response = await http.get(
+          patientAPI[0],
+          headers: requestHeaders
+      );
+    }
+    catch(e){
+      print(e);
+    }
+    if(response.statusCode == 400){
+      print("Error in response");
+      print(response.body);
+      throw new Error();
+    }
+    print(response.body);
+    print(response.statusCode);
+    return response.body.toString();
+
+  }
 }
 
 
