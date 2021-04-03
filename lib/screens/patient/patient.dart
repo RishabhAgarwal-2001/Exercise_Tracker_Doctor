@@ -7,7 +7,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'dart:async';
 import 'dart:convert';
-import 'dart:collection';
+import 'package:exercise_tracker_doctor/screens/patient/patientList.dart';
 
 
 
@@ -207,15 +207,26 @@ class _DashboardOnePageState extends State<DashboardOnePage> {
                   .map(
                     (activity) => Column(
                   children: <Widget>[
-                    CircleAvatar(
-                      radius: 20,
-                      backgroundColor: Theme.of(context).buttonColor,
-                      child: activity.icon != null
-                          ? Icon(
-                        activity.icon,
-                        size: 18.0,
-                      )
-                          : null,
+                    InkWell(
+                      child: CircleAvatar(
+                        radius: 20,
+                        backgroundColor: Theme.of(context).buttonColor,
+                        child: activity.icon != null
+                            ? Icon(
+                          activity.icon,
+                          size: 18.0,
+                        )
+                            : null,
+                      ),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                PatientTable(apiResponse: apiResponse,),
+                          ),
+                        );
+                      },
                     ),
                     const SizedBox(height: 5.0),
                     Text(
@@ -392,7 +403,6 @@ class DonutPieChart extends StatelessWidget {
   }
 }
 
-/// Sample linear data type.
 class LinearSales {
   final String exercise;
   final int count;
@@ -408,9 +418,4 @@ class Activity {
 
 final List<Activity> activities = [
   Activity(title: "Daily Exercise Tracking", icon: FontAwesomeIcons.listOl),
-  // Activity(title: "Messages", icon: FontAwesomeIcons.sms),
-  // Activity(title: "Appointments", icon: FontAwesomeIcons.calendarDay),
-  // Activity(title: "Video Consultation", icon: FontAwesomeIcons.video),
-  // Activity(title: "Summary", icon: FontAwesomeIcons.fileAlt),
-  // Activity(title: "Billing", icon: FontAwesomeIcons.dollarSign),
 ];
