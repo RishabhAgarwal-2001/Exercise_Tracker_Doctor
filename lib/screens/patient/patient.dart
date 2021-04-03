@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:exercise_tracker_doctor/models/Patient.dart';
+import 'package:exercise_tracker_doctor/services/authServices/UserTypeService.dart';
 // import 'package:flutter_ui_challenges/src/pages/animations/animation1/animation1.dart';
 // import 'package:cached_network_image/cached_network_image.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
+import 'dart:async';
 
-class DashboardOnePage extends StatelessWidget {
+
+
+class DashboardOnePage extends StatefulWidget {
   // static final String path = "lib/src/pages/dashboard/dash1.dart";
   //
   // final String image = images[0];
@@ -16,6 +20,28 @@ class DashboardOnePage extends StatelessWidget {
     Key key,
     this.patient
   });
+
+  @override
+  _DashboardOnePageState createState() => _DashboardOnePageState();
+}
+
+class _DashboardOnePageState extends State<DashboardOnePage> {
+
+  UserTypeService userService;
+
+  Future<void> getPatientDetails() async {
+    String response = await userService.getOnePatient(widget.patient.mobile);
+    print(response);
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    userService = UserTypeService();
+    print("Calling API");
+    getPatientDetails();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +92,7 @@ class DashboardOnePage extends StatelessWidget {
                 FittedBox(
                   fit: BoxFit.fitWidth,
                   child: Text(
-                    "${patient.treatmentDay}/${patient.totalTreatmentLength}",
+                    "${widget.patient.treatmentDay}/${widget.patient.totalTreatmentLength}",
                     style: stats,
                   ),
                 ),
@@ -92,7 +118,7 @@ class DashboardOnePage extends StatelessWidget {
                 FittedBox(
                   fit: BoxFit.fitWidth,
                   child: Text(
-                    "0/${patient.treatmentDay}",
+                    "0/${widget.patient.treatmentDay}",
                     style: stats,
                   ),
                 ),
@@ -118,7 +144,7 @@ class DashboardOnePage extends StatelessWidget {
                 FittedBox(
                   fit: BoxFit.fitWidth,
                   child: Text(
-                    "${patient.treatmentDay}/${patient.treatmentDay}",
+                    "${widget.patient.treatmentDay}/${widget.patient.treatmentDay}",
                     style: stats,
                   ),
                 ),
@@ -133,50 +159,6 @@ class DashboardOnePage extends StatelessWidget {
             ),
           ),
         ],
-      ),
-    );
-    SliverToBoxAdapter(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: _buildTitledContainer("Stats",
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Column(
-                  children: <Widget>[
-                    Text(
-                      "+500",
-                      style: stats,
-                    ),
-                    const SizedBox(height: 5.0),
-                    Text("Leads".toUpperCase())
-                  ],
-                ),
-                const SizedBox(width: 20.0),
-                const SizedBox(width: 20.0),
-                Column(
-                  children: <Widget>[
-                    Text(
-                      "+600",
-                      style: stats,
-                    ),
-                    const SizedBox(height: 5.0),
-                    Text("Orders".toUpperCase())
-                  ],
-                ),
-                const SizedBox(width: 20.0),
-                Column(
-                  children: <Widget>[
-                    Text(
-                      "+100",
-                      style: stats,
-                    ),
-                    const SizedBox(height: 5.0),
-                    Text("Deliveries".toUpperCase())
-                  ],
-                ),
-              ],
-            )),
       ),
     );
   }
@@ -277,7 +259,7 @@ class DashboardOnePage extends StatelessWidget {
       elevation: 0.5,
       backgroundColor: Colors.white,
       title: Text(
-        "${patient.name}",
+        "${widget.patient.name}",
         style: TextStyle(
             color: Colors.black, fontWeight: FontWeight.bold, fontSize: 20.0),
         textAlign: TextAlign.center,
@@ -292,7 +274,7 @@ class DashboardOnePage extends StatelessWidget {
       padding: EdgeInsets.all(0),
       icon: CircleAvatar(
         backgroundColor: Colors.grey.shade300,
-        child: CircleAvatar(radius: 16, backgroundImage: AssetImage("assets/Images/vk.png")),
+        child: CircleAvatar(radius: 16, backgroundImage: AssetImage(widget.patient.image !=null ? widget.patient.image : "assets/Images/person8.png")),
       ),
       onPressed: () {},
     );

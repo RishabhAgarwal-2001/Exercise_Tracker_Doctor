@@ -51,7 +51,7 @@ class PatientCard extends StatelessWidget {
                               child: CircleAvatar(
                                 backgroundColor: Colors.transparent,
                                 // TODO: Add Image From API
-                                backgroundImage: AssetImage("assets/Images/vk.png"),
+                                backgroundImage: AssetImage(patient.image !=null ? patient.image : "assets/Images/person8.png"),
                               ),
                             )
                           ),

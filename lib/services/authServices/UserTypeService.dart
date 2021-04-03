@@ -34,7 +34,8 @@ class UserTypeService{
     baseUrl+"/api/v1/register/staff"
   ];
   List<String> patientAPI = [
-    baseUrl+"/api/v1/doctor/get_all_patients"
+    baseUrl+"/api/v1/doctor/get_all_patients",
+    baseUrl+"/api/v1/doctor/get_one_patient"
   ];
 
   Future<void> setUserRegistered(int status)async{
@@ -243,6 +244,44 @@ class UserTypeService{
     return response.body.toString();
 
   }
+
+  Future<String> getOnePatient(String mobileNumber) async {
+    await checkUserType();
+    if(userType==-1) throw Error();
+
+    await checkJWTToken();
+
+
+    Map<String, String> requestBody = {
+      "x-access-token" : jwtToken,
+      "patient": mobileNumber
+    };
+    Map<String, String> requestHeaders = {
+      'x-access-token': jwtToken
+    };
+    var response;
+    print("Making a Request for patient details...");
+    try{
+      response = await http.post(
+          patientAPI[1],
+          body: requestBody,
+          headers: requestHeaders
+      );
+    }
+    catch(e){
+      print("This is the error => ${e}");
+    }
+    if(response.statusCode == 400){
+      print("Error in response");
+      print(response.body);
+      throw new Error();
+    }
+    print(response.body);
+    print(response.statusCode);
+    return response.body.toString();
+
+  }
+
 }
 
 

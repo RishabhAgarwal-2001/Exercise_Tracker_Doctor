@@ -6,6 +6,7 @@ import 'package:exercise_tracker_doctor/screens/main/components/patient_card.dar
 import 'dart:async';
 import 'package:exercise_tracker_doctor/screens/main/components/side_menu.dart';
 import 'package:exercise_tracker_doctor/screens/patient/patient.dart';
+import 'dart:convert';
 
 // TODO (1): Add Shimmer While Loading
 
@@ -114,12 +115,31 @@ class _ListOfPatientsState extends State<ListOfPatients> {
     }
   }
 
+  List<Patient> getPatientList(List<dynamic>response) {
+  List<Patient> patients = List.generate(response.length, (index) => Patient(
+    name: response[index][1] + " " + response[index][2],
+    image: response[index][3],
+    operation: response[index][4],
+    isDoingExerciseOnTime: (response[index][7] == 1 && response[index][6] == 1) ? true : false,
+    criticalStatus: false,
+    totalTreatmentLength: 60,
+    treatmentDay: response[index][5],
+    mobile: response[index][0]
+  ));
+  return patients;
+}
+
+
   Future<void> _getPatients() async {
     setState(() {
       isLoading = true;
     });
     String response = await userService.getPatients();
-    print("response => ${response}");
+    List<dynamic> list = json.decode(response);
+    print(list);
+    patients = getPatientList(list);
+    _filteredPatients = patients;
+    print(_filteredPatients);
     setState(() {
       isLoading = false;
     });
