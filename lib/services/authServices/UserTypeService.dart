@@ -254,7 +254,7 @@ class UserTypeService{
 
     Map<String, String> requestBody = {
       "x-access-token" : jwtToken,
-      "patient": mobileNumber
+      "mobile_number": mobileNumber
     };
     Map<String, String> requestHeaders = {
       'x-access-token': jwtToken

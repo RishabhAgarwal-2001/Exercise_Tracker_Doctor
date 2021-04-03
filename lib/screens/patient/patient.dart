@@ -6,6 +6,8 @@ import 'package:exercise_tracker_doctor/services/authServices/UserTypeService.da
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'dart:async';
+import 'dart:convert';
+import 'dart:collection';
 
 
 
@@ -28,10 +30,27 @@ class DashboardOnePage extends StatefulWidget {
 class _DashboardOnePageState extends State<DashboardOnePage> {
 
   UserTypeService userService;
+  bool isLoading;
+  int exercisesMissed;
+  int exercisesDone;
+  List<dynamic> apiResponse;
 
   Future<void> getPatientDetails() async {
+    this.setState(() {
+      isLoading = true;
+    });
     String response = await userService.getOnePatient(widget.patient.mobile);
-    print(response);
+    apiResponse = json.decode(response);
+    for(var i=0; i<apiResponse.length; i++) {
+      if(apiResponse[i]["marked_by_patient"]==1 && apiResponse[i]["marked_by_relative"]==1) {
+        exercisesDone++;
+      } else {
+        exercisesMissed++;
+      }
+    }
+    this.setState(() {
+      isLoading = false;
+    });
   }
 
   @override
@@ -39,16 +58,26 @@ class _DashboardOnePageState extends State<DashboardOnePage> {
     // TODO: implement initState
     super.initState();
     userService = UserTypeService();
-    print("Calling API");
+    isLoading = false;
+    exercisesDone = 0;
+    exercisesMissed = 0;
     getPatientDetails();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Theme.of(context).buttonColor,
-      appBar: _buildAppBar(context),
-      body: _buildBody(context),
+    return Stack(
+      children: [
+        Scaffold(
+          backgroundColor: Theme.of(context).buttonColor,
+          appBar: _buildAppBar(context),
+          body: _buildBody(context),
+        ),
+        isLoading == true ? Container(
+          color: Colors.black.withOpacity(0.5),
+          height: MediaQuery.of(context).size.height,
+          width: MediaQuery.of(context).size.width,
+          child: Center(child: CircularProgressIndicator(),)) : Container()]
     );
   }
 
@@ -61,7 +90,7 @@ class _DashboardOnePageState extends State<DashboardOnePage> {
             padding: const EdgeInsets.all(16.0),
             child: _buildTitledContainer("Exercises",
                 child: Container(
-                    height: 200, child: DonutPieChart.withSampleData())),
+                    height: 200, child: DonutPieChart.withSampleData(apiResponse))),
           ),
         ),
         _buildActivities(context),
@@ -118,7 +147,7 @@ class _DashboardOnePageState extends State<DashboardOnePage> {
                 FittedBox(
                   fit: BoxFit.fitWidth,
                   child: Text(
-                    "0/${widget.patient.treatmentDay}",
+                    "${exercisesMissed}/${exercisesMissed+exercisesDone}",
                     style: stats,
                   ),
                 ),
@@ -144,7 +173,7 @@ class _DashboardOnePageState extends State<DashboardOnePage> {
                 FittedBox(
                   fit: BoxFit.fitWidth,
                   child: Text(
-                    "${widget.patient.treatmentDay}/${widget.patient.treatmentDay}",
+                    "${exercisesDone}/${exercisesDone+exercisesMissed}",
                     style: stats,
                   ),
                 ),
@@ -310,9 +339,9 @@ class DonutPieChart extends StatelessWidget {
   DonutPieChart(this.seriesList, {this.animate});
 
   /// Creates a [PieChart] with sample data and no transition.
-  factory DonutPieChart.withSampleData() {
+  factory DonutPieChart.withSampleData(List<dynamic> apiResponse) {
     return new DonutPieChart(
-      _createSampleData(),
+      _createSampleData(apiResponse),
       // Disable animations for image tests.
       animate: true,
     );
@@ -330,19 +359,33 @@ class DonutPieChart extends StatelessWidget {
   }
 
   /// Create one series with sample hard coded data.
-  static List<charts.Series<LinearSales, String>> _createSampleData() {
-    final data = [
-      new LinearSales("Planks", 10),
-      new LinearSales("Squats", 20),
-      new LinearSales("Walk", 30),
-      new LinearSales("Push-Ups", 40),
-    ];
+  static List<charts.Series<LinearSales, String>> _createSampleData(List<dynamic> apiResponse) {
+
+    Map map = Map<String, int>();
+
+    var lengthOfList = apiResponse==null ? 0 : apiResponse.length;
+
+    for(var i=0; i< lengthOfList; i++) {
+      if(map.containsKey(apiResponse[i]["exercise_name"].toString().toUpperCase())) {
+        map[apiResponse[i]["exercise_name"].toString().toUpperCase()]++;
+      } else {
+        map[apiResponse[i]["exercise_name"].toString().toUpperCase()] = 1;
+      }
+    }
+
+    List<LinearSales>data = [];
+
+    map.forEach((key, value) {
+      data.add(LinearSales("${key.toString()[0]}${key.toString().substring(1).toLowerCase()}", value));
+    });
+
+    print("Data => ${data}");
 
     return [
       new charts.Series<LinearSales, String>(
         id: 'Exercises',
-        domainFn: (LinearSales sales, _) => sales.month,
-        measureFn: (LinearSales sales, _) => sales.sales,
+        domainFn: (LinearSales sales, _) => sales.exercise,
+        measureFn: (LinearSales sales, _) => sales.count,
         data: data,
       )
     ];
@@ -351,10 +394,10 @@ class DonutPieChart extends StatelessWidget {
 
 /// Sample linear data type.
 class LinearSales {
-  final String month;
-  final int sales;
+  final String exercise;
+  final int count;
 
-  LinearSales(this.month, this.sales);
+  LinearSales(this.exercise, this.count);
 }
 
 class Activity {
