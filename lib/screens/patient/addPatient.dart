@@ -64,7 +64,9 @@ class _AddPatient extends State<AddPatient> {
     });
     print("Line Number 60");
     int statusCode = await userService.registerDoctor(_userNameSecond.text, _userNameSecond.text, _department.text, _designation.text,_hospital.text);
-    successPushPage(statusCode);
+    if(statusCode==200) {
+      Navigator.of(context).pushReplacement(new MaterialPageRoute(builder: (context)=> MainScreen()));
+    }
   }
 
   Future<void> _addPatient() async {

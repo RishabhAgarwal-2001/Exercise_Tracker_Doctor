@@ -180,7 +180,7 @@ class _ListOfPatientsState extends State<ListOfPatients> {
       drawer: ConstrainedBox(
         constraints: BoxConstraints(maxWidth: 250),
         // TODO: Add Drawer Here
-        child: SideMenu(notifyParent: applyFilter, filterActive: filterOption,)
+        child: SideMenu(notifyParent: applyFilter, filterActive: filterOption, refreshPage: _getPatients,)
       ),
       body:Stack(
         children: <Widget>[

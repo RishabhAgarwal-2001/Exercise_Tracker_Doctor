@@ -7,10 +7,11 @@ import 'package:exercise_tracker_doctor/services/authServices/FirebaseUser.dart'
 class SideMenu extends StatelessWidget {
 
   final Function(int) notifyParent;
+  final Function refreshPage;
   final filterActive;
 
   const SideMenu({
-    Key key, @required this.notifyParent, this.filterActive
+    Key key, @required this.notifyParent, this.filterActive, @required this.refreshPage
   }) : super(key: key);
 
   @override
@@ -44,6 +45,14 @@ class SideMenu extends StatelessWidget {
               },
             ),
 
+            ListTile(
+              title: Text('Refresh Page'),
+              leading: Icon(Icons.refresh),
+              onTap: () {
+                refreshPage();
+                Navigator.of(context).pop();
+              },
+            ),
 
             Divider(),
 
