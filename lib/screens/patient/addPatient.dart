@@ -21,6 +21,8 @@ class _AddPatient extends State<AddPatient> {
   final TextEditingController _patientMobileNumber = new TextEditingController();
   final TextEditingController _staff1MobileNumber = new TextEditingController();
   final TextEditingController _staff2MobileNumber = new TextEditingController();
+  final TextEditingController _treatmentStartDate = new TextEditingController();
+  final TextEditingController _treatmentEndDate = new TextEditingController();
   bool isLoading;
   UserTypeService userService;
 
@@ -70,6 +72,7 @@ class _AddPatient extends State<AddPatient> {
       isLoading = true;
     });
     print("Make an API Call Here to Add Patient");
+    int statusCode = await userService.addPatient(_patientMobileNumber.text, _treatmentStartDate.text, _treatmentEndDate.text, _staff1MobileNumber.text, _staff2MobileNumber.text);
     setState(() {
       isLoading = false;
     });
@@ -94,18 +97,24 @@ class _AddPatient extends State<AddPatient> {
     else return _mobileValidator(value);
   }
 
-  String _nameValidator(String value) {
 
-    if (value.trim().length == 0)
-      return 'Field Can not be Empty';
-    else
-      return null;
+  Future _selectDate() async {
+    DateTime picked = await showDatePicker(
+      context: context,
+      initialDate: new DateTime.now(),
+      firstDate: new DateTime(2019),
+      lastDate: new DateTime(2025)
+    );
+    if(picked!=null){
+      return "${picked.year.toString()}-${picked.month.toString().padLeft(2,'0')}-${picked.day.toString().padLeft(2,'0')}";
+    }
   }
 
   @override
   void initState() {
     isLoading = false;
     userService = UserTypeService();
+    DateTime today = new DateTime.now();
     super.initState();
   }
 
@@ -184,6 +193,50 @@ class _AddPatient extends State<AddPatient> {
                                             maxLines: 1,
                                           ),
 
+                                          TextFormField(
+                                            onSaved: (String val) {},
+                                            onTap: () async {
+                                              _treatmentStartDate.text = await _selectDate();
+                                            },
+                                            readOnly: true,
+                                            // validator: _mobileValidator,
+                                            keyboardType: null,
+                                            controller: _treatmentStartDate,
+                                            decoration: new InputDecoration(
+                                              suffixIcon: Icon(Icons.calendar_today),
+
+                                              fillColor: filledColor,
+                                              filled: true,
+                                              contentPadding: textFieldPadding,
+                                              enabledBorder: outlineBorder,
+                                              focusedBorder: outlineBorder,
+                                              hintStyle: hintTextStyleSolid,
+                                              hintText: "Treatment Start Date",
+                                            ),
+                                            maxLines: 1,
+                                          ),
+
+                                          TextFormField(
+                                            onSaved: (String val) {},
+                                            onTap: () async{
+                                              _treatmentEndDate.text = await _selectDate();
+                                            },
+                                            // validator: _mobileValidator,
+                                            readOnly: true,
+                                            controller: _treatmentEndDate,
+                                            decoration: new InputDecoration(
+                                              suffixIcon: Icon(Icons.calendar_today),
+
+                                              fillColor: filledColor,
+                                              filled: true,
+                                              contentPadding: textFieldPadding,
+                                              enabledBorder: outlineBorder,
+                                              focusedBorder: outlineBorder,
+                                              hintStyle: hintTextStyleSolid,
+                                              hintText: "Treatment End Date",
+                                            ),
+                                            maxLines: 1,
+                                          ),
 
                                           Column(
                                             crossAxisAlignment: CrossAxisAlignment.start,

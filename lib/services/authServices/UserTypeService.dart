@@ -37,6 +37,12 @@ class UserTypeService{
     baseUrl+"/api/v1/doctor/get_all_patients",
     baseUrl+"/api/v1/doctor/get_one_patient"
   ];
+  List<String> addPatientAPI = [
+    baseUrl + "/api/v1/treatment/week_1_2",
+    baseUrl + "/api/v1/treatment/week_3",
+    baseUrl + "/api/v1/treatment/week_4_5",
+    baseUrl + "/api/v1/treatment/week_6"
+  ];
 
   Future<void> setUserRegistered(int status)async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -279,6 +285,109 @@ class UserTypeService{
     print(response.body);
     print(response.statusCode);
     return response.body.toString();
+
+  }
+
+  Future<int> addPatient(String mobileNumber, String startDate, String endDate,String staff1,String staff2)async{
+    print("Inside Function to Add Patient");
+
+    await checkUserType();
+    if(userType==-1) throw Error();
+
+    await checkJWTToken();
+
+    Map<String, String> requestBody = {
+      "mobile_number": mobileNumber,
+      "start_date" : startDate,
+      "end_date":endDate,
+      "staff1": staff1,
+      "staff2": staff2,
+      "x-access-token" : jwtToken,
+    };
+    Map<String, String> requestHeaders = {
+      'x-access-token': jwtToken
+    };
+    print(requestBody);
+    print(requestHeaders);
+    print("sending req 1");
+    var response;
+    try{
+      response = await http.post(
+          addPatientAPI[0],
+          body: requestBody,
+          headers: requestHeaders
+      );
+    }
+    catch(e){
+      print(e);
+    }
+    print("Response 1 Received");
+    if(response.statusCode == 400){
+      print("Error in response");
+      print(response.body);
+      throw new Error();
+    }
+    String treatmentID;
+    print(response.statusCode);
+    print(response.statusCode.runtimeType);
+    print(response.body);
+    if(response.statusCode == 200){
+      print("I am Here");
+      print(json.decode(response.body));
+      treatmentID = json.decode(response.body)["treatmentID"];
+      print("treatmentID => ${treatmentID}");
+    }
+    requestBody["treatmentID"] = treatmentID;
+    try{
+      print('Sending request 2');
+      response = await http.post(
+          addPatientAPI[1],
+          body: requestBody,
+          headers: requestHeaders
+      );
+    } catch(e) {
+      print(e);
+    }
+    print("Response 2 Received");
+    print(response.body);
+    print(response.statusCode);
+    if(response.statusCode == 400){
+      print("Error in response");
+      print(response.body);
+      throw new Error();
+    }
+    try{
+      print('Sending request 3');
+      response = await http.post(
+          addPatientAPI[2],
+          body: requestBody,
+          headers: requestHeaders
+      );
+    } catch(e) {
+      print(e);
+    }
+    print("Response 3 Received");
+    print(response.body);
+    print(response.statusCode);
+    if(response.statusCode == 400){
+      print("Error in response");
+      print(response.body);
+      throw new Error();
+    }
+    try{
+      print('Sending request 4');
+      response = await http.post(
+          addPatientAPI[3],
+          body: requestBody,
+          headers: requestHeaders
+      );
+    } catch(e) {
+      print(e);
+    }
+    print("Response 4 Received");
+    print(response.body);
+    print(response.statusCode);
+    return response.statusCode;
 
   }
 
