@@ -6,6 +6,7 @@ import 'package:exercise_tracker_doctor/screens/main/components/patient_card.dar
 import 'dart:async';
 import 'package:exercise_tracker_doctor/screens/main/components/side_menu.dart';
 import 'package:exercise_tracker_doctor/screens/patient/patient.dart';
+import 'package:exercise_tracker_doctor/screens/patient/addPatient.dart';
 import 'dart:convert';
 
 // TODO (1): Add Shimmer While Loading
@@ -157,10 +158,25 @@ class _ListOfPatientsState extends State<ListOfPatients> {
       });
     });
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
+      floatingActionButton: userService.userType==0 ? FloatingActionButton.extended(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) =>
+                  AddPatient(),
+            ),
+          );
+        },
+        label: const Text('New Patient'),
+        icon: Icon(Icons.add),
+        backgroundColor: Colors.deepPurple,
+      ) : null,
       drawer: ConstrainedBox(
         constraints: BoxConstraints(maxWidth: 250),
         // TODO: Add Drawer Here
