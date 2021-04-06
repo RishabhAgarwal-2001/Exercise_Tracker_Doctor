@@ -223,7 +223,6 @@ class UserTypeService{
     if(userType==-1) throw Error();
 
     await checkJWTToken();
-
     Map<String, String> requestBody = {
       "x-access-token" : jwtToken,
     };

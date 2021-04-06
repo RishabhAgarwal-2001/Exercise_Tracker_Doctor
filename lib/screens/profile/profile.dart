@@ -1,17 +1,97 @@
+import 'dart:convert';
+import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:exercise_tracker_doctor/models/Patient.dart';
+import 'package:exercise_tracker_doctor/services/authServices/UserTypeService.dart';
 
-class DashboardThreePage extends StatelessWidget {
 
+class DashboardThreePage extends StatefulWidget {
+
+  @override
+  _DashboardThreePageState createState() => _DashboardThreePageState();
+}
+
+class _DashboardThreePageState extends State<DashboardThreePage> {
   final TextStyle whiteText = TextStyle(color: Colors.white);
+  UserTypeService userService;
+  List<Patient> _patient;
+  bool isLoading;
+
+  int __numberOfPatients;
+  int __activePatients;
+  int __onSchedule;
+  int __offSchedule;
+  int __critical;
+
+  List<Patient> getPatientList(List<dynamic>response) {
+    List<Patient> patients = List.generate(response.length, (index) => Patient(
+        name: response[index][1] + " " + response[index][2],
+        image: response[index][3],
+        operation: response[index][4],
+        isDoingExerciseOnTime: (response[index][7] == 1 && response[index][6] == 1) ? true : false,
+        criticalStatus: false,
+        totalTreatmentLength: 60,
+        treatmentDay: response[index][5],
+        mobile: response[index][0]
+    ));
+    return patients;
+  }
+
+  Future<void> _getPatients() async {
+    setState(() {
+      isLoading = true;
+    });
+    String response = await userService.getPatients();
+    List<dynamic> list = json.decode(response);
+    _patient = getPatientList(list);
+    __numberOfPatients = _patient.length;
+    __activePatients = __numberOfPatients;
+    __onSchedule = 0;
+    __critical = 0;
+    _patient.forEach((element) {
+      if(element.isDoingExerciseOnTime) __onSchedule++;
+      if(element.criticalStatus) __critical++;
+    });
+    __offSchedule = __numberOfPatients - __onSchedule;
+    setState(() {
+      isLoading = false;
+    });
+  }
+
+
+  @override
+  void initState() {
+    userService = UserTypeService();
+    isLoading = false;
+    __numberOfPatients = 0;
+    __activePatients = 0;
+    __onSchedule = 0;
+    __offSchedule = 0;
+    __critical = 0;
+    _getPatients().catchError((e){
+      setState(() {
+        isLoading = false;
+      });
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: _buildBody(context),
+      body: Stack(
+        children: <Widget>[
+          _buildBody(context),
+          isLoading==true ? Container(
+              color: Colors.black.withOpacity(0.5),
+              height: MediaQuery.of(context).size.height,
+              width: MediaQuery.of(context).size.width,
+              child: Center(child: CircularProgressIndicator(),)):Container(),
+        ]
+      ),
     );
   }
-
-
 
   Widget _buildBody(BuildContext context) {
     return SingleChildScrollView(
@@ -23,7 +103,7 @@ class DashboardThreePage extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(left: 16.0),
             child: Text(
-              "Appointments",
+              "Quick Summary",
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18.0),
             ),
           ),
@@ -68,7 +148,7 @@ class DashboardThreePage extends StatelessWidget {
                       ),
                     ),
                     title: Text("Today"),
-                    subtitle: Text("18 patients"),
+                    subtitle: Text("${__activePatients} patients"),
                   ),
                 ),
                 VerticalDivider(),
@@ -106,8 +186,8 @@ class DashboardThreePage extends StatelessWidget {
                         ],
                       ),
                     ),
-                    title: Text("Canceled"),
-                    subtitle: Text("7 patients"),
+                    title: Text("Off Schedule"),
+                    subtitle: Text("${__offSchedule} patients"),
                   ),
                 ),
               ],
@@ -123,7 +203,7 @@ class DashboardThreePage extends StatelessWidget {
                     color: Colors.pink,
                     icon: Icons.portrait,
                     title: "Number of Patient",
-                    data: "20",
+                    data: "${__numberOfPatients}",
                   ),
                 ),
                 const SizedBox(width: 16.0),
@@ -132,7 +212,7 @@ class DashboardThreePage extends StatelessWidget {
                     color: Colors.green,
                     icon: Icons.portrait,
                     title: "Active",
-                    data: "13",
+                    data: "${__activePatients}",
                   ),
                 ),
               ],
@@ -148,7 +228,7 @@ class DashboardThreePage extends StatelessWidget {
                     color: Colors.blue,
                     icon: Icons.favorite,
                     title: "On Schedule",
-                    data: "8",
+                    data: "${__onSchedule}",
                   ),
                 ),
                 const SizedBox(width: 16.0),
@@ -157,7 +237,7 @@ class DashboardThreePage extends StatelessWidget {
                     color: Colors.pink,
                     icon: Icons.portrait,
                     title: "Off Schedule",
-                    data: "5",
+                    data: "${__offSchedule}",
                   ),
                 ),
                 const SizedBox(width: 16.0),
@@ -166,7 +246,7 @@ class DashboardThreePage extends StatelessWidget {
                     color: Colors.pink,
                     icon: Icons.dangerous,
                     title: "Critical",
-                    data: "3",
+                    data: "${__critical}",
                   ),
                 ),
               ],
