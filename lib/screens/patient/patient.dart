@@ -1,3 +1,4 @@
+import 'package:exercise_tracker_doctor/screens/patient/questions.dart';
 import 'package:flutter/material.dart';
 import 'package:exercise_tracker_doctor/models/Patient.dart';
 import 'package:exercise_tracker_doctor/services/authServices/UserTypeService.dart';
@@ -9,7 +10,8 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:exercise_tracker_doctor/screens/patient/patientList.dart';
 
-
+String dailyExerciseTracking = "Daily Exercise Tracking";
+String questionnaire = "Questions";
 
 class DashboardOnePage extends StatefulWidget {
   // static final String path = "lib/src/pages/dashboard/dash1.dart";
@@ -34,6 +36,8 @@ class _DashboardOnePageState extends State<DashboardOnePage> {
   int exercisesMissed;
   int exercisesDone;
   List<dynamic> apiResponse;
+
+
 
   Future<void> getPatientDetails() async {
     this.setState(() {
@@ -219,13 +223,26 @@ class _DashboardOnePageState extends State<DashboardOnePage> {
                             : null,
                       ),
                       onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                PatientTable(apiResponse: apiResponse,),
-                          ),
-                        );
+                        if(activity.title==dailyExerciseTracking) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  PatientTable(apiResponse: apiResponse,),
+                            ),
+                          );
+                        } else if(activity.title==questionnaire) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  QuestionsResponse(
+                                      widget.patient.mobile,
+                                      widget.patient.treatmentDay
+                                  ),
+                            ),
+                          );
+                        }
                       },
                     ),
                     const SizedBox(height: 5.0),
@@ -417,5 +434,6 @@ class Activity {
 }
 
 final List<Activity> activities = [
-  Activity(title: "Daily Exercise Tracking", icon: FontAwesomeIcons.listOl),
+  Activity(title: dailyExerciseTracking, icon: FontAwesomeIcons.listOl),
+  Activity(title: questionnaire, icon: FontAwesomeIcons.question),
 ];

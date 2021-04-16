@@ -35,7 +35,10 @@ class UserTypeService{
   ];
   List<String> patientAPI = [
     baseUrl+"/api/v1/doctor/get_all_patients",
-    baseUrl+"/api/v1/doctor/get_one_patient"
+    baseUrl+"/api/v1/doctor/get_one_patient",
+    baseUrl+"/api/v1/doctor/star",
+    baseUrl+"/api/v1/questionnaire/get_doctor/questionnaire",
+    baseUrl+"/api/v1/doctor/critical",
   ];
   List<String> addPatientAPI = [
     baseUrl + "/api/v1/treatment/week_1_2",
@@ -388,6 +391,116 @@ class UserTypeService{
     print(response.statusCode);
     return response.statusCode;
 
+  }
+
+  Future<String> pinPatient(String mobileNumber, int star) async{
+    await checkUserType();
+    if(userType==-1) throw Error();
+
+    await checkJWTToken();
+    Map<String, String> requestBody = {
+      "x-access-token" : jwtToken,
+      "mobile_number" : mobileNumber,
+      "star": star.toString()
+    };
+    Map<String, String> requestHeaders = {
+      'x-access-token': jwtToken
+    };
+    var response;
+    try{
+      response = await http.post(
+          patientAPI[2],
+          headers: requestHeaders,
+          body: requestBody
+      );
+    }
+    catch(e){
+      print(e);
+    }
+    if(response.statusCode == 400){
+      print("Error in response");
+      print(response.body);
+      throw new Error();
+    }
+    print(response.body);
+    print(response.statusCode);
+    return response.statusCode.toString();
+
+  }
+
+  Future<String> getQuestionResponse(String mobileNumber, int day) async{
+    print("Getting Question Started...");
+    print("Mobile NUmber: ${mobileNumber}");
+    print("Treatment Day: ${day}");
+    await checkUserType();
+    if(userType==-1) throw Error();
+
+    await checkJWTToken();
+    Map<String, String> requestBody = {
+      "x-access-token" : jwtToken,
+      "mobile_number" : mobileNumber,
+      "day": day.toString()
+    };
+    Map<String, String> requestHeaders = {
+      'x-access-token': jwtToken
+    };
+    var response;
+    try{
+      response = await http.post(
+          patientAPI[3],
+          headers: requestHeaders,
+          body: requestBody
+      );
+    }
+    catch(e){
+      print(e);
+    }
+    if(response.statusCode == 400){
+      print("Error in response");
+      print(response.body);
+      throw new Error();
+    }
+    print(response.body);
+    print(response.statusCode);
+    return response.body.toString();
+
+  }
+
+  Future<String> setCriticalStatus(String mobileNumber, bool setStatus) async{
+    print("Setting Criticality Status...");
+    print("Mobile NUmber: ${mobileNumber}");
+    print("Status: ${setStatus}");
+    await checkUserType();
+    if(userType==-1) throw Error();
+    await checkJWTToken();
+    Map<String, String> requestBody = {
+      "x-access-token" : jwtToken,
+      "mobile_number" : mobileNumber,
+      "critical": setStatus ? "1" : "0",
+    };
+    Map<String, String> requestHeaders = {
+      'x-access-token': jwtToken
+    };
+    var response;
+    try{
+      response = await http.post(
+          patientAPI[4],
+          headers: requestHeaders,
+          body: requestBody
+      );
+    }
+    catch(e){
+      print(e);
+    }
+    print("Status Code : ${response.statusCode}");
+    if(response.statusCode == 400){
+      print("Error in response");
+      print(response.body);
+      throw new Error();
+    }
+    print(response.body);
+    print("Status Code : ${response.statusCode}");
+    return response.statusCode.toString();
   }
 
 }

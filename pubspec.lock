@@ -908,6 +908,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.9.7+15"
+  websafe_svg:
+    dependency: "direct main"
+    description:
+      name: websafe_svg
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.1.4+1"
   win32:
     dependency: transitive
     description:

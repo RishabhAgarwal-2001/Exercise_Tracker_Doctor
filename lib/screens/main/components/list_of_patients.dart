@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:exercise_tracker_doctor/services/authServices/UserTypeService.dart';
 import 'package:flutter/material.dart';
 import 'package:exercise_tracker_doctor/models/Patient.dart';
@@ -236,7 +238,7 @@ class _ListOfPatientsState extends State<ListOfPatients> {
                               itemCount: _filteredPatients==null ? 0: _filteredPatients.length,
                               itemBuilder: (context, index) => PatientCard(
                                   patient: _filteredPatients[index],
-                                  press:(){
+                                  handleTap:(){
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
@@ -244,7 +246,45 @@ class _ListOfPatientsState extends State<ListOfPatients> {
                                             DashboardOnePage(patient: patients[index]),
                                       ),
                                     );
-                                  }
+                                  },
+                                handleLongPress: () async {
+                                  setState(() {
+                                    isLoading = true;
+                                  });
+                                  await userService.pinPatient(_filteredPatients[index].mobile.toString(), 1);
+                                  setState(() {
+                                    isLoading = false;
+                                  });
+                                },
+                                handleCriticalityChange: () async {
+                                    setState(() {
+                                      isLoading = true;
+                                    });
+                                    Patient oldPatient = _filteredPatients[index];
+                                    int idx = patients.indexOf(oldPatient);
+                                    Patient newPatient = new Patient(
+                                      treatmentDay: oldPatient.treatmentDay,
+                                      totalTreatmentLength: oldPatient.totalTreatmentLength,
+                                      criticalStatus: !oldPatient.criticalStatus,
+                                      isDoingExerciseOnTime: oldPatient.isDoingExerciseOnTime,
+                                      operation: oldPatient.operation,
+                                      image: oldPatient.image,
+                                      mobile: oldPatient.mobile,
+                                      name: oldPatient.name,
+                                    );
+                                    patients[idx] = newPatient;
+                                    setState(() {
+                                      isLoading=false;
+                                    });
+                                    String response = await userService.setCriticalStatus(oldPatient.mobile.toString(), newPatient.criticalStatus);
+                                    if(response!="200") {
+                                      print('Failed to Change at Backend');
+                                      patients[idx] = oldPatient;
+                                      setState(() {
+                                        isLoading=false;
+                                      });
+                                    }
+                                }
                               )
                           )
                       )
