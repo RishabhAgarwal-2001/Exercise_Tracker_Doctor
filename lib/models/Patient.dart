@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 // Class to Model Each Patient
 class Patient {
   final String name, image, operation, mobile;
-  final bool isDoingExerciseOnTime, criticalStatus;
+  final bool isDoingExerciseOnTime, criticalStatus, isMarked;
   final int totalTreatmentLength, treatmentDay;
 
   Patient({
@@ -14,7 +14,8 @@ class Patient {
     this.criticalStatus,
     this.totalTreatmentLength,
     this.treatmentDay,
-    this.mobile
+    this.mobile,
+    this.isMarked,
   });
 
 }

@@ -126,6 +126,18 @@ class SideMenu extends StatelessWidget {
               ),
             ),
 
+            Container(
+              color: filterActive==6 ? kBgDarkColor : null,
+              child: ListTile(
+                  title: Text('Bookmarked Patients'),
+                  leading: Icon(Icons.bookmark),
+                  onTap: () {
+                    Navigator.of(context).pop();
+                    notifyParent(6);
+                  }
+              ),
+            ),
+
 
 
 

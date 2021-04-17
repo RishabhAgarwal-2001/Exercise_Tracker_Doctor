@@ -59,7 +59,6 @@ class _DashboardOnePageState extends State<DashboardOnePage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     userService = UserTypeService();
     isLoading = false;

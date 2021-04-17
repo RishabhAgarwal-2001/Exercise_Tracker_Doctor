@@ -20,7 +20,7 @@ class PatientCard extends StatelessWidget {
   final VoidCallback handleLongPress;
   final VoidCallback handleCriticalityChange;
 
-  void showAlertDialog(BuildContext context) {
+  void showAlertDialog(BuildContext context, bool isMarked) {
     Widget NoButton = FlatButton(
       child: Text("No"),
       onPressed:  () {
@@ -38,7 +38,8 @@ class PatientCard extends StatelessWidget {
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
       title: Text("AlertDialog"),
-      content: Text("Pin this patient?"),
+      content: isMarked ? Text("Unpin this patient?") :
+        Text("Pin this patient?"),
       actions: [
         NoButton,
         YesButton,
@@ -61,7 +62,7 @@ class PatientCard extends StatelessWidget {
       child: InkWell(
         onTap: handleTap,
         onLongPress: (){
-          showAlertDialog(context);
+          showAlertDialog(context, patient.isMarked);
         },
         child: Stack(
           children: [
@@ -149,7 +150,8 @@ class PatientCard extends StatelessWidget {
                   ],
                 )
             ),
-            Positioned(
+            if(patient.isMarked)
+              Positioned(
                 right: 8,
                 top: 0,
                 child: WebsafeSvg.asset(

@@ -113,6 +113,20 @@ class _ListOfPatientsState extends State<ListOfPatients> {
           }
       );
     }
+    else if(filterType==6) {
+      _debouncer.run(
+              () {
+            setState((){
+              _filteredPatients = patients.where(
+                      (p) => (
+                      p.isMarked
+                  )
+              ).toList();
+              debugPrint("Patients Who are marked as Important");
+            });
+          }
+      );
+    }
     else {
       debugPrint("Invalid Option Found");
     }
@@ -124,10 +138,11 @@ class _ListOfPatientsState extends State<ListOfPatients> {
     image: response[index][3],
     operation: response[index][4],
     isDoingExerciseOnTime: (response[index][7] == 1 && response[index][6] == 1) ? true : false,
-    criticalStatus: false,
+    criticalStatus: response[index][9] == 1 ? true: false,
     totalTreatmentLength: 60,
     treatmentDay: response[index][5],
-    mobile: response[index][0]
+    mobile: response[index][0],
+    isMarked: response[index][8] == 1 ? true: false,
   ));
   return patients;
 }
@@ -145,6 +160,14 @@ class _ListOfPatientsState extends State<ListOfPatients> {
     print(_filteredPatients);
     setState(() {
       isLoading = false;
+    });
+  }
+
+  void sortPatients() {
+    patients.sort((a, b){
+      String x = a.isMarked ? '1' : '0';
+      String y = b.isMarked ? '1' : '0';
+      return x.compareTo(y);
     });
   }
 
@@ -248,10 +271,36 @@ class _ListOfPatientsState extends State<ListOfPatients> {
                                     );
                                   },
                                 handleLongPress: () async {
+                                  int marked = 1;
+                                  if(_filteredPatients[index].isMarked) marked = 0;
+                                  Patient oldPatient = _filteredPatients[index];
+                                  Patient newPatient = new Patient(
+                                    treatmentDay: oldPatient.treatmentDay,
+                                    totalTreatmentLength: oldPatient.totalTreatmentLength,
+                                    criticalStatus: oldPatient.criticalStatus,
+                                    isDoingExerciseOnTime: oldPatient.isDoingExerciseOnTime,
+                                    operation: oldPatient.operation,
+                                    image: oldPatient.image,
+                                    mobile: oldPatient.mobile,
+                                    name: oldPatient.name,
+                                    isMarked: !oldPatient.isMarked,
+                                  );
+                                  int idx = patients.indexOf(oldPatient);
+                                  patients[idx] = newPatient;
+                                  sortPatients();
                                   setState(() {
-                                    isLoading = true;
+                                    isLoading = false;
                                   });
-                                  await userService.pinPatient(_filteredPatients[index].mobile.toString(), 1);
+                                  try{
+                                    String code = await userService.pinPatient(_filteredPatients[index].mobile.toString(), marked);
+                                    if(code!="200") {
+                                      patients[idx] = oldPatient;
+                                    }
+                                  } catch(err) {
+                                    setState(() {
+                                      isLoading = false;
+                                    });
+                                  }
                                   setState(() {
                                     isLoading = false;
                                   });
@@ -271,6 +320,7 @@ class _ListOfPatientsState extends State<ListOfPatients> {
                                       image: oldPatient.image,
                                       mobile: oldPatient.mobile,
                                       name: oldPatient.name,
+                                      isMarked: oldPatient.isMarked,
                                     );
                                     patients[idx] = newPatient;
                                     setState(() {

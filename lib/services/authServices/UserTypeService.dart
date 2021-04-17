@@ -462,7 +462,7 @@ class UserTypeService{
     }
     print(response.body);
     print(response.statusCode);
-    return response.body.toString();
+    return response.statusCode.toString();
 
   }
 
