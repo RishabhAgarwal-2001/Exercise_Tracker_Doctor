@@ -265,6 +265,7 @@ class _AddPatient extends State<AddPatient> {
                                                   enabledBorder: outlineBorder,
                                                   focusedBorder: outlineBorder,
                                                   hintStyle: hintTextStyleSolid,
+                                                  hintText: "Staff 1 Mobile Number(optional)",
                                                 ),
                                                 maxLines: 1,
                                               ),
