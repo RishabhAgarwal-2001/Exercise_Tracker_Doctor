@@ -265,7 +265,6 @@ class _AddPatient extends State<AddPatient> {
                                                   enabledBorder: outlineBorder,
                                                   focusedBorder: outlineBorder,
                                                   hintStyle: hintTextStyleSolid,
-                                                  hintText: "Staff 1 Mobile Number",
                                                 ),
                                                 maxLines: 1,
                                               ),
@@ -285,7 +284,7 @@ class _AddPatient extends State<AddPatient> {
                                               enabledBorder: outlineBorder,
                                               focusedBorder: outlineBorder,
                                               hintStyle: hintTextStyleSolid,
-                                              hintText: "Staff 2 Mobile Number",
+                                              hintText: "Staff 2 Mobile Number(optional)",
                                             ),
                                             maxLines: 1,
                                           ),
@@ -297,7 +296,9 @@ class _AddPatient extends State<AddPatient> {
                                                       isLoading = false;
                                                     });
                                                   });
+
                                                 }
+                                                Navigator.of(context).pushReplacement(new MaterialPageRoute(builder: (context)=> MainScreen()));
                                               },
                                               child: RaisedPinkButton("Submit")),
                                         ],
