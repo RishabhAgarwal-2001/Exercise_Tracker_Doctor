@@ -378,11 +378,11 @@ class DonutPieChart extends StatelessWidget {
   Widget build(BuildContext context) {
     return new charts.PieChart(seriesList,
         animate: animate,
-        // Configure the width of the pie slices to 60px. The remaining space in
-        // the chart will be left as a hole in the center.
         defaultRenderer: new charts.ArcRendererConfig(
-            arcWidth: 60,
-            arcRendererDecorators: [new charts.ArcLabelDecorator()]));
+            arcWidth: 80,
+            arcRendererDecorators: [new charts.ArcLabelDecorator()]),
+
+    );
   }
 
   /// Create one series with sample hard coded data.
