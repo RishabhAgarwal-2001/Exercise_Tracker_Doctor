@@ -12,6 +12,7 @@ import 'package:exercise_tracker_doctor/screens/patient/patientList.dart';
 
 String dailyExerciseTracking = "Daily Exercise Tracking";
 String questionnaire = "Questions";
+String referees = "Collaborators";
 
 class DashboardOnePage extends StatefulWidget {
   // static final String path = "lib/src/pages/dashboard/dash1.dart";
@@ -36,6 +37,9 @@ class _DashboardOnePageState extends State<DashboardOnePage> {
   int exercisesMissed;
   int exercisesDone;
   List<dynamic> apiResponse;
+  TextEditingController _textFieldController1 = TextEditingController();
+  TextEditingController _textFieldController2 = TextEditingController();
+  final _formKey1 = GlobalKey<FormState>();
 
 
 
@@ -55,6 +59,103 @@ class _DashboardOnePageState extends State<DashboardOnePage> {
     this.setState(() {
       isLoading = false;
     });
+  }
+
+  void _showDialog() {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          elevation: 1,
+          child: Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: 20,
+              vertical: 10,
+            ),
+            child: IntrinsicWidth(
+              child: Container(
+                height: 0.35 * MediaQuery.of(context).size.height,
+                child: Form(
+                  key: _formKey1,
+                  child: Column(
+                    children: <Widget>[
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        "Manage Collaborators",
+                        style: TextStyle(
+                          fontWeight: FontWeight.w700,
+                          fontFamily: "Roboto",
+                          fontSize: 18,
+                        ),
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      TextFormField(
+                        controller: _textFieldController1,
+                        decoration: InputDecoration(prefixText: "+91 ",
+                            hintText: "Phone Number 1"),
+                        validator: _phoneNumberValidator,
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      TextFormField(
+                        controller: _textFieldController2,
+                        decoration: InputDecoration(prefixText: "+91 ",
+                            hintText: "Phone Number 2"),
+                        validator: _phoneNumberValidator,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          FlatButton(
+                            onPressed: () {
+                              print("Key Pressed");
+                              if(_formKey1.currentState.validate()) {
+                                // TODO: Update the Staff Number
+                                // TODO: Create and Update Local Variables
+                                Navigator.of(context).pop();
+                              }
+                            },
+                            child: Text("UPDATE"),
+                          ),
+                          FlatButton(
+                            onPressed: () {
+                              // TODO: Reset TextControllers to Original Number
+                              Navigator.of(context).pop();
+                            },
+                            child: Text("CANCEL"),
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
+                )
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  String _phoneNumberValidator(String value) {
+    String pattern = r'(^(?:[+0]9)?[0-9]{10,12}$)';
+    RegExp regExp = new RegExp(pattern);
+    if (value.length == 0) {
+      return 'Please enter mobile number';
+    }
+    else if (!regExp.hasMatch(value)) {
+      return 'Please enter valid mobile number';
+    }
+    return null;
   }
 
   @override
@@ -241,6 +342,8 @@ class _DashboardOnePageState extends State<DashboardOnePage> {
                                   ),
                             ),
                           );
+                        } else if(activity.title==referees) {
+                          _showDialog();
                         }
                       },
                     ),
@@ -435,4 +538,5 @@ class Activity {
 final List<Activity> activities = [
   Activity(title: dailyExerciseTracking, icon: FontAwesomeIcons.listOl),
   Activity(title: questionnaire, icon: FontAwesomeIcons.question),
+  Activity(title: referees, icon: FontAwesomeIcons.users)
 ];

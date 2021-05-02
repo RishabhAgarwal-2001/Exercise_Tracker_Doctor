@@ -46,6 +46,10 @@ class UserTypeService{
     baseUrl + "/api/v1/treatment/week_4_5",
     baseUrl + "/api/v1/treatment/week_6"
   ];
+  List<String> doctorProfileAPI = [
+    baseUrl + "/api/v1/doctor/get_doctor_profile",
+    baseUrl + "/api/v1/doctor/update_doctor_profile"
+  ];
 
   Future<void> setUserRegistered(int status)async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -501,6 +505,31 @@ class UserTypeService{
     print(response.body);
     print("Status Code : ${response.statusCode}");
     return response.statusCode.toString();
+  }
+
+  Future<String> getDoctorProfile() async {
+    await checkUserType();
+    if(userType==-1) throw Error();
+    await checkJWTToken();
+    Map<String, String> requestHeaders = {
+      'x-access-token': jwtToken
+    };
+    var response;
+    try{
+      response = await http.get(
+          doctorProfileAPI[0],
+          headers: requestHeaders
+      );
+    }
+    catch(e){
+      print(e);
+    }
+    if(response.statusCode == 400){
+      print("Error in response From Getting Doctor Profile");
+      print(response.body);
+      throw new Error();
+    }
+    return response.statusCode==200?response.body:"{}";
   }
 
 }

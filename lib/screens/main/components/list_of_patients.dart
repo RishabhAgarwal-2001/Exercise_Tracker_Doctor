@@ -44,6 +44,7 @@ class _ListOfPatientsState extends State<ListOfPatients> {
   int filterOption = 1;
   bool isLoading;
   UserTypeService userService;
+  String department, designation, hospital;
 
   void applyFilter(int filterType) {
     filterOption = filterType;
@@ -153,8 +154,14 @@ class _ListOfPatientsState extends State<ListOfPatients> {
       isLoading = true;
     });
     String response = await userService.getPatients();
+    String profileResponse = await userService.getDoctorProfile();
     List<dynamic> list = json.decode(response);
+    Map<String, dynamic> map = json.decode(profileResponse);
+    hospital = map["profile"]["hospital"];
+    designation = map["profile"]["designation"];
+    department = map["profile"]["department"];
     print(list);
+    print(map);
     patients = getPatientList(list);
     _filteredPatients = patients;
     print(_filteredPatients);
@@ -205,7 +212,8 @@ class _ListOfPatientsState extends State<ListOfPatients> {
       drawer: ConstrainedBox(
         constraints: BoxConstraints(maxWidth: 250),
         // TODO: Add Drawer Here
-        child: SideMenu(notifyParent: applyFilter, filterActive: filterOption, refreshPage: _getPatients,)
+        child: SideMenu(notifyParent: applyFilter, filterActive: filterOption, refreshPage: _getPatients,
+        department: department, designation: designation, hospital: hospital)
       ),
       body:Stack(
         children: <Widget>[
