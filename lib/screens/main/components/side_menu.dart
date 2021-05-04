@@ -9,11 +9,12 @@ class SideMenu extends StatelessWidget {
   final Function(int) notifyParent;
   final Function refreshPage;
   final filterActive;
-  final designation, department, hospital;
+  final first_name, last_name, designation, department, hospital;
 
   const SideMenu({
     Key key, @required this.notifyParent, this.filterActive, @required this.refreshPage,
-    @required this.designation, @required this.department, @required this.hospital
+    @required this.designation, @required this.department, @required this.hospital,
+    @required this.first_name, @required this.last_name
   }) : super(key: key);
 
   @override
@@ -23,8 +24,8 @@ class SideMenu extends StatelessWidget {
           padding: EdgeInsets.all(0.0),
           children: <Widget>[
             UserAccountsDrawerHeader(
-              accountName: Text('${this.designation} at ${this.department} Department'),
-              accountEmail: Text('${this.hospital}'),
+              accountName: Text('${this.first_name} ${this.last_name}'),
+              accountEmail: Text('${this.designation}'),
               currentAccountPicture: CircleAvatar(
                 backgroundImage: AssetImage('assets/Images/doctor.jpg'),
               ),

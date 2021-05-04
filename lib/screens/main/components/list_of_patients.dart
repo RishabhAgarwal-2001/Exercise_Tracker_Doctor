@@ -44,7 +44,8 @@ class _ListOfPatientsState extends State<ListOfPatients> {
   int filterOption = 1;
   bool isLoading;
   UserTypeService userService;
-  String department, designation, hospital;
+  String first_name, last_name, department, designation, hospital;
+  List<bool> isSelected;
 
   void applyFilter(int filterType) {
     filterOption = filterType;
@@ -144,6 +145,7 @@ class _ListOfPatientsState extends State<ListOfPatients> {
     treatmentDay: response[index][5],
     mobile: response[index][0],
     isMarked: response[index][8] == 1 ? true: false,
+    treatmentId: response[index][10]
   ));
   return patients;
 }
@@ -157,6 +159,8 @@ class _ListOfPatientsState extends State<ListOfPatients> {
     String profileResponse = await userService.getDoctorProfile();
     List<dynamic> list = json.decode(response);
     Map<String, dynamic> map = json.decode(profileResponse);
+    first_name = map["profile"]["first_name"];
+    last_name = map["profile"]["last_name"];
     hospital = map["profile"]["hospital"];
     designation = map["profile"]["designation"];
     department = map["profile"]["department"];
@@ -183,6 +187,7 @@ class _ListOfPatientsState extends State<ListOfPatients> {
     super.initState();
     isLoading = false;
     _filteredPatients = patients;
+    isSelected = [true, true, false, false, false, false];
     userService = UserTypeService();
     _getPatients().catchError((e){
       setState(() {
@@ -211,9 +216,9 @@ class _ListOfPatientsState extends State<ListOfPatients> {
       ) : null,
       drawer: ConstrainedBox(
         constraints: BoxConstraints(maxWidth: 250),
-        // TODO: Add Drawer Here
         child: SideMenu(notifyParent: applyFilter, filterActive: filterOption, refreshPage: _getPatients,
-        department: department, designation: designation, hospital: hospital)
+        department: department, designation: designation, hospital: hospital,
+        first_name: first_name, last_name: last_name)
       ),
       body:Stack(
         children: <Widget>[
@@ -263,7 +268,77 @@ class _ListOfPatientsState extends State<ListOfPatients> {
                             ],
                           )
                       ),
-                      SizedBox(height: kDefaultPadding), // SizedBox
+                      SizedBox(height: kDefaultPadding),
+                      Row(
+                        children: [
+                          Spacer(),
+                          ToggleButtons(
+                            borderColor: Colors.blueAccent,
+                            fillColor: Colors.blueAccent,
+                            borderWidth: 1,
+                            selectedBorderColor: Colors.black,
+                            selectedColor: Colors.white,
+                            borderRadius: BorderRadius.circular(10),
+                            children: <Widget>[
+                              Padding(
+                                padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+                                child: Text(
+                                  'DAYS',
+                                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 8.0, right: 8.00),
+                                child: Text(
+                                  '0-60',
+                                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 8.0, right: 8.00),
+                                child: Text(
+                                  '0-15',
+                                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+                                child: Text(
+                                  '16-30',
+                                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+                                child: Text(
+                                  '31-45',
+                                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+                                child: Text(
+                                  '46-60',
+                                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            ],
+                            onPressed: (int index) {
+                              if(index!=0) {
+                                setState(() {
+                                  for (int i = 0; i < isSelected.length; i++) {
+                                    if(i==0) isSelected[i] = true;
+                                    else isSelected[i] = i == index;
+                                  }
+                                });
+                              }
+                            },
+                            isSelected: isSelected,
+                          ),
+                          Spacer(),
+                        ],
+                      ),
+                      SizedBox(height: kDefaultPadding),// SizedBox
                       Expanded(
                           child: ListView.builder(
                               itemCount: _filteredPatients==null ? 0: _filteredPatients.length,

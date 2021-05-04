@@ -23,7 +23,7 @@ class _DashboardThreePageState extends State<DashboardThreePage> {
   int __offSchedule;
   int __critical;
 
-  String hospital, designation, department;
+  String first_name, last_name, hospital, designation, department;
 
   List<Patient> getPatientList(List<dynamic>response) {
     List<Patient> patients = List.generate(response.length, (index) => Patient(
@@ -43,6 +43,8 @@ class _DashboardThreePageState extends State<DashboardThreePage> {
     hospital = "";
     designation = "";
     department = "";
+    first_name = "";
+    last_name = "";
     setState(() {
       isLoading = true;
     });
@@ -50,6 +52,8 @@ class _DashboardThreePageState extends State<DashboardThreePage> {
     String profileResponse = await userService.getDoctorProfile();
     List<dynamic> list = json.decode(response);
     Map<String, dynamic> map = json.decode(profileResponse);
+    first_name = map["profile"]["first_name"] ?? "Doctor Name";
+    last_name = map["profile"]["last_name"] ?? "";
     hospital = map["profile"]["hospital"] ?? "";
     designation = map["profile"]["designation"] ?? "Doctor";
     department = map["profile"]["department"] ?? "N/A";
@@ -296,7 +300,7 @@ class _DashboardThreePageState extends State<DashboardThreePage> {
           Padding(
             padding: const EdgeInsets.only(left: 16.0),
             child: Text(
-              "Designation: ${designation}",
+              "${first_name} ${last_name}",
               style: whiteText.copyWith(
                 fontSize: 18.0,
                 fontWeight: FontWeight.w500,
@@ -307,7 +311,7 @@ class _DashboardThreePageState extends State<DashboardThreePage> {
           Padding(
             padding: const EdgeInsets.only(left: 16.0),
             child: Text(
-              "Deaprtment ${department}\nHospital ${hospital}",
+              "${designation}\n${department}\n${hospital}",
               style: whiteText,
             ),
           ),

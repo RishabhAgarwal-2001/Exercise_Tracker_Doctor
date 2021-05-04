@@ -58,7 +58,7 @@ class _RegisterPatientRelativeState extends State<RegisterPatientRelative> {
       isLoading = true;
     });
     print("Line Number 60");
-    int statusCode = await userService.registerDoctor(_userNameSecond.text, _userNameSecond.text, _department.text, _designation.text,_hospital.text);
+    int statusCode = await userService.registerDoctor(_userNameFirst.text, _userNameSecond.text, _department.text, _designation.text,_hospital.text);
     successPushPage(statusCode);
   }
 //touse later
@@ -66,7 +66,7 @@ class _RegisterPatientRelativeState extends State<RegisterPatientRelative> {
     setState(() {
       isLoading = true;
     });
-    int statusCode = await userService.registerStaff(_userNameSecond.text, _userNameSecond.text, _department.text, _designation.text,_hospital.text);
+    int statusCode = await userService.registerStaff(_userNameFirst.text, _userNameSecond.text, _department.text, _designation.text,_hospital.text);
     successPushPage(statusCode);
   }
 

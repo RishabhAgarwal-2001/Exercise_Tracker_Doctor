@@ -56,6 +56,7 @@ class _DashboardOnePageState extends State<DashboardOnePage> {
         exercisesMissed++;
       }
     }
+    // await getStaffDetails();
     this.setState(() {
       isLoading = false;
     });
@@ -156,6 +157,23 @@ class _DashboardOnePageState extends State<DashboardOnePage> {
       return 'Please enter valid mobile number';
     }
     return null;
+  }
+
+  Future<void> getStaffDetails() async {
+    print('Sending Request For Staff Number');
+    String response = await userService.getStaffNumber(widget.patient.treatmentId);
+    print(response);
+    // apiResponse = json.decode(response);
+    // for(var i=0; i<apiResponse.length; i++) {
+    //   if(apiResponse[i]["marked_by_patient"]==1 && apiResponse[i]["marked_by_relative"]==1) {
+    //     exercisesDone++;
+    //   } else {
+    //     exercisesMissed++;
+    //   }
+    // }
+    this.setState(() {
+      isLoading = false;
+    });
   }
 
   @override

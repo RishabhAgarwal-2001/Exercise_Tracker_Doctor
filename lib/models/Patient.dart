@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 // Class to Model Each Patient
 class Patient {
-  final String name, image, operation, mobile;
+  final String name, image, operation, mobile, treatmentId;
   final bool isDoingExerciseOnTime, criticalStatus, isMarked;
   final int totalTreatmentLength, treatmentDay;
 
@@ -16,6 +16,7 @@ class Patient {
     this.treatmentDay,
     this.mobile,
     this.isMarked,
+    this.treatmentId
   });
 
 }
@@ -34,7 +35,8 @@ List<Patient> patients = List.generate(
       isDoingExerciseOnTime: demo_data[index]["isDoingExerciseOnTime"],
       criticalStatus: demo_data[index]["criticalStatus"],
       totalTreatmentLength: demo_data[index]["totalTreatmentLength"],
-      treatmentDay: demo_data[index]["treatmentDay"]
+      treatmentDay: demo_data[index]["treatmentDay"],
+      treatmentId: demo_data[index]["treatementId"]
     )
 );
 

@@ -42,13 +42,17 @@ class UserTypeService{
   ];
   List<String> addPatientAPI = [
     baseUrl + "/api/v1/treatment/week_1_2",
-    baseUrl + "/api/v1/treatment/week_3",
+    baseUrl + "/api/v1/treatment/week_3_1",
     baseUrl + "/api/v1/treatment/week_4_5",
-    baseUrl + "/api/v1/treatment/week_6"
+    baseUrl + "/api/v1/treatment/week_6",
+    baseUrl + "/api/v1/treatment/week_3_2"
   ];
   List<String> doctorProfileAPI = [
     baseUrl + "/api/v1/doctor/get_doctor_profile",
     baseUrl + "/api/v1/doctor/update_doctor_profile"
+  ];
+  List<String> handleStaffAPI = [
+    baseUrl + "/api/v1/doctor/getStaff"
   ];
 
   Future<void> setUserRegistered(int status)async{
@@ -345,7 +349,7 @@ class UserTypeService{
     }
     requestBody["treatmentID"] = treatmentID;
     try{
-      print('Sending request 2');
+      print('Sending request 2.1');
       response = await http.post(
           addPatientAPI[1],
           body: requestBody,
@@ -354,7 +358,25 @@ class UserTypeService{
     } catch(e) {
       print(e);
     }
-    print("Response 2 Received");
+    print("Response 2.1 Received");
+    print(response.body);
+    print(response.statusCode);
+    if(response.statusCode == 400){
+      print("Error in response");
+      print(response.body);
+      throw new Error();
+    }
+    try{
+      print('Sending request 2.2');
+      response = await http.post(
+          addPatientAPI[4],
+          body: requestBody,
+          headers: requestHeaders
+      );
+    } catch(e) {
+      print(e);
+    }
+    print("Response 2.2 Received");
     print(response.body);
     print(response.statusCode);
     if(response.statusCode == 400){
@@ -519,6 +541,37 @@ class UserTypeService{
       response = await http.get(
           doctorProfileAPI[0],
           headers: requestHeaders
+      );
+    }
+    catch(e){
+      print(e);
+    }
+    if(response.statusCode == 400){
+      print("Error in response From Getting Doctor Profile");
+      print(response.body);
+      throw new Error();
+    }
+    return response.statusCode==200?response.body:"{}";
+  }
+
+  Future<String> getStaffNumber(String treatmentId) async {
+    print("Getting Staff number");
+    await checkUserType();
+    if(userType==-1) throw Error();
+    await checkJWTToken();
+    Map<String, String> requestHeaders = {
+      'x-access-token': jwtToken
+    };
+    print("Token ${jwtToken}");
+    Map<String, String> requestBody = {
+      'treatmentID': treatmentId
+    };
+    var response;
+    try{
+      response = await http.post(
+          handleStaffAPI[0],
+          headers: requestHeaders,
+          body: requestBody
       );
     }
     catch(e){

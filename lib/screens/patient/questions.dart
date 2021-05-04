@@ -32,8 +32,9 @@ class QuestionsResponseState extends State<QuestionsResponse> {
     setState(() {
       isLoading = true;
     });
-    String response = await userService.getQuestionResponse(widget.mobileNumber, widget.treatmentDay);
+    String response = await userService.getQuestionResponse(widget.mobileNumber, 9);
     List<dynamic> responseConverted = json.decode(response);
+    print('Response = ${responseConverted}');
     responseConverted.forEach((element) {
       messages.add(Message(0, element["question"].toString()));
       messages.add(Message(1, element["response"].toString()));
