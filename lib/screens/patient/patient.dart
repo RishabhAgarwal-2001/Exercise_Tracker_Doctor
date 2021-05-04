@@ -8,10 +8,13 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'dart:async';
 import 'dart:convert';
+import 'dart:math';
 import 'package:exercise_tracker_doctor/screens/patient/patientList.dart';
+import 'package:charts_flutter/src/text_element.dart' as ChartText;
+import 'package:charts_flutter/src/text_style.dart' as ChartStyle;
 
 String dailyExerciseTracking = "Daily Exercise Tracking";
-String questionnaire = "Questions";
+String questionnaire = "Feedback";
 String referees = "Collaborators";
 
 class DashboardOnePage extends StatefulWidget {
@@ -483,6 +486,7 @@ class _DashboardOnePageState extends State<DashboardOnePage> {
 class DonutPieChart extends StatelessWidget {
   final List<charts.Series> seriesList;
   final bool animate;
+  List<LinearSales> dataList;
 
   DonutPieChart(this.seriesList, {this.animate});
 
@@ -498,15 +502,23 @@ class DonutPieChart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return new charts.PieChart(seriesList,
-        animate: animate,
-        defaultRenderer: new charts.ArcRendererConfig(
-            arcWidth: 80,
-            arcRendererDecorators: [new charts.ArcLabelDecorator()]),
-
-    );
+              animate: animate,
+              selectionModels: [
+                charts.SelectionModelConfig(
+                    changedListener: (charts.SelectionModel model) {
+                      print(model.selectedSeries[0].domainFn(model.selectedDatum[0].index));
+                      print(model.selectedSeries[0].measureFn(model.selectedDatum[0].index));
+                    }
+                )
+              ],
+              behaviors: [
+                new charts.DomainHighlighter(),
+                new charts.SelectNearest(eventTrigger: charts.SelectionTrigger.tapAndDrag)
+              ],
+              defaultInteractions: true,
+            );
   }
 
-  /// Create one series with sample hard coded data.
   static List<charts.Series<LinearSales, String>> _createSampleData(List<dynamic> apiResponse) {
 
     Map map = Map<String, int>();
@@ -558,3 +570,4 @@ final List<Activity> activities = [
   Activity(title: questionnaire, icon: FontAwesomeIcons.question),
   Activity(title: referees, icon: FontAwesomeIcons.users)
 ];
+
