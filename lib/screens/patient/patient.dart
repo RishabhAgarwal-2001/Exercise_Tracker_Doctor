@@ -10,6 +10,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
 import 'package:exercise_tracker_doctor/screens/patient/patientList.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:charts_flutter/src/text_element.dart' as ChartText;
 import 'package:charts_flutter/src/text_style.dart' as ChartStyle;
 
@@ -208,8 +209,8 @@ class _DashboardOnePageState extends State<DashboardOnePage> {
 
   _buildBody(BuildContext context) {
     return CustomScrollView(
-      slivers: <Widget>[
-        _buildStats(),
+        slivers: [
+          _buildStats(),
         SliverToBoxAdapter(
           child: Padding(
             padding: const EdgeInsets.all(16.0),
@@ -228,93 +229,191 @@ class _DashboardOnePageState extends State<DashboardOnePage> {
         fontWeight: FontWeight.bold, fontSize: 20.0, color: Colors.white);
     return SliverPadding(
       padding: const EdgeInsets.all(16.0),
-      sliver: SliverGrid.count(
-        crossAxisSpacing: 16.0,
-        mainAxisSpacing: 16.0,
-        childAspectRatio: 1,
-        crossAxisCount: 3,
-        children: <Widget>[
-          Container(
-            padding: const EdgeInsets.all(8.0),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10.0),
-              color: Colors.blue,
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                FittedBox(
-                  fit: BoxFit.fitWidth,
-                  child: Text(
-                    "${widget.patient.treatmentDay}/${widget.patient.totalTreatmentLength}",
-                    style: stats,
+      sliver: SliverToBoxAdapter(
+        child: CarouselSlider(
+          options: CarouselOptions(height: 150.0),
+          items: [1, 2, 3].map((i){
+            return Builder(
+              builder: (BuildContext context) {
+                return Container(
+                  width: MediaQuery.of(context).size.width,
+                  margin: EdgeInsets.symmetric(horizontal: 5.0),
+                  decoration: BoxDecoration(
+                      color: Colors.transparent
                   ),
-                ),
-                const SizedBox(height: 5.0),
-                FittedBox(
-                  fit: BoxFit.fitWidth,
-                  child: Text("Treatment Days".toUpperCase())
-                )
-
-
-              ],
-            ),
-          ),
-          Container(
-            padding: const EdgeInsets.all(8.0),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10.0),
-              color: Colors.pink,
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                FittedBox(
-                  fit: BoxFit.fitWidth,
-                  child: Text(
-                    "${exercisesMissed}/${exercisesMissed+exercisesDone}",
-                    style: stats,
-                  ),
-                ),
-                const SizedBox(height: 5.0),
-                FittedBox(
-                    fit: BoxFit.fitWidth,
-                    child: Text("Exercises Missed".toUpperCase())
-                )
-
-
-              ],
-            ),
-          ),
-          Container(
-            padding: const EdgeInsets.all(8.0),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10.0),
-              color: Colors.green,
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                FittedBox(
-                  fit: BoxFit.fitWidth,
-                  child: Text(
-                    "${exercisesDone}/${exercisesDone+exercisesMissed}",
-                    style: stats,
-                  ),
-                ),
-                const SizedBox(height: 5.0),
-                FittedBox(
-                    fit: BoxFit.fitWidth,
-                    child: Text("Exercises Done".toUpperCase())
-                )
-
-
-              ],
-            ),
-          ),
-        ],
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      Image(image: AssetImage('assets/Images/b$i.png')),
+                      Positioned(
+                        top: i==1 ? 20 : 10,
+                        right: i==1 ? 9 : (i==2 ? 180 : 0),
+                        child: i==1 ?
+                        CircleAvatar(
+                            backgroundColor: i==1 ?
+                            (Colors.orange) :
+                            (i==2 ? (Color(0xFF611C61)) : (Colors.blue)),
+                            radius: i==3? 55.0 : 50.0,
+                            child: Center(
+                                child: Text(
+                                    "${widget.patient.treatmentDay}/${widget.patient.totalTreatmentLength}",
+                                    style: TextStyle(color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 25)
+                                )
+                            )
+                        ) :
+                        Container(
+                            height: 130,
+                            width: 100,
+                            decoration: new BoxDecoration(
+                              shape: BoxShape.rectangle,
+                              border: new Border.all(
+                                color: Colors.transparent,
+                                width: 1.0,
+                              ),
+                              color: i==2 ? Color(0xFF611C61) : Color(
+                                  0xFF0855A7)
+                            ),
+                            child: Center(
+                                child: Column(
+                                  children: [
+                                    SizedBox(
+                                      height: 20,
+                                    ),
+                                    Text(
+                                      i==2 ? "EXERCISES DONE" : "EXERCISES MISSED",
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 20,
+                                    ),
+                                    Text(
+                                      i==2 ? "${exercisesDone}/${exercisesDone+exercisesMissed}"
+                                          : "${exercisesMissed}/${exercisesDone+exercisesMissed}",
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 20
+                                      ),
+                                    )
+                                  ],
+                                )
+                            )
+                        ) ,
+                      ),
+                      i==1 ? Positioned(
+                        top: 5,
+                        left: 80,
+                        child: Text('TREATMENT\nDAYS',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 15
+                        ))
+                      ) : Container()
+                    ],
+                  )
+                );
+              }
+            );
+          }).toList()
+        )
       ),
     );
+    // return SliverPadding(
+    //   padding: const EdgeInsets.all(16.0),
+    //   sliver: SliverGrid.count(
+    //     crossAxisSpacing: 16.0,
+    //     mainAxisSpacing: 16.0,
+    //     childAspectRatio: 1,
+    //     crossAxisCount: 3,
+    //     children: <Widget>[
+    //       Container(
+    //         padding: const EdgeInsets.all(8.0),
+    //         decoration: BoxDecoration(
+    //           borderRadius: BorderRadius.circular(10.0),
+    //           color: Colors.blue,
+    //         ),
+    //         child: Column(
+    //           mainAxisAlignment: MainAxisAlignment.center,
+    //           children: <Widget>[
+    //             FittedBox(
+    //               fit: BoxFit.fitWidth,
+    //               child: Text(
+    //                 "${widget.patient.treatmentDay}/${widget.patient.totalTreatmentLength}",
+    //                 style: stats,
+    //               ),
+    //             ),
+    //             const SizedBox(height: 5.0),
+    //             FittedBox(
+    //               fit: BoxFit.fitWidth,
+    //               child: Text("Treatment Days".toUpperCase())
+    //             )
+    //
+    //
+    //           ],
+    //         ),
+    //       ),
+    //       Container(
+    //         padding: const EdgeInsets.all(8.0),
+    //         decoration: BoxDecoration(
+    //           borderRadius: BorderRadius.circular(10.0),
+    //           color: Colors.pink,
+    //         ),
+    //         child: Column(
+    //           mainAxisAlignment: MainAxisAlignment.center,
+    //           children: <Widget>[
+    //             FittedBox(
+    //               fit: BoxFit.fitWidth,
+    //               child: Text(
+    //                 "${exercisesMissed}/${exercisesMissed+exercisesDone}",
+    //                 style: stats,
+    //               ),
+    //             ),
+    //             const SizedBox(height: 5.0),
+    //             FittedBox(
+    //                 fit: BoxFit.fitWidth,
+    //                 child: Text("Exercises Missed".toUpperCase())
+    //             )
+    //
+    //
+    //           ],
+    //         ),
+    //       ),
+    //       Container(
+    //         padding: const EdgeInsets.all(8.0),
+    //         decoration: BoxDecoration(
+    //           borderRadius: BorderRadius.circular(10.0),
+    //           color: Colors.green,
+    //         ),
+    //         child: Column(
+    //           mainAxisAlignment: MainAxisAlignment.center,
+    //           children: <Widget>[
+    //             FittedBox(
+    //               fit: BoxFit.fitWidth,
+    //               child: Text(
+    //                 "${exercisesDone}/${exercisesDone+exercisesMissed}",
+    //                 style: stats,
+    //               ),
+    //             ),
+    //             const SizedBox(height: 5.0),
+    //             FittedBox(
+    //                 fit: BoxFit.fitWidth,
+    //                 child: Text("Exercises Done".toUpperCase())
+    //             )
+    //
+    //
+    //           ],
+    //         ),
+    //       ),
+    //     ],
+    //   ),
+    // );
   }
 
   SliverPadding _buildActivities(BuildContext context) {
