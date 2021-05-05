@@ -231,7 +231,7 @@ class _DashboardOnePageState extends State<DashboardOnePage> {
       padding: const EdgeInsets.all(16.0),
       sliver: SliverToBoxAdapter(
         child: CarouselSlider(
-          options: CarouselOptions(height: 150.0),
+          options: CarouselOptions(height: 130.0),
           items: [1, 2, 3].map((i){
             return Builder(
               builder: (BuildContext context) {
@@ -242,18 +242,17 @@ class _DashboardOnePageState extends State<DashboardOnePage> {
                       color: Colors.transparent
                   ),
                   child: Stack(
-                    alignment: Alignment.center,
+                    alignment: Alignment.topCenter,
                     children: [
                       Image(image: AssetImage('assets/Images/b$i.png')),
-                      Positioned(
-                        top: i==1 ? 20 : 10,
-                        right: i==1 ? 9 : (i==2 ? 180 : 0),
-                        child: i==1 ?
-                        CircleAvatar(
+                      i==1 ? Positioned(
+                        top: 20,
+                        right: 23,
+                        child: CircleAvatar(
                             backgroundColor: i==1 ?
                             (Colors.orange) :
                             (i==2 ? (Color(0xFF611C61)) : (Colors.blue)),
-                            radius: i==3? 55.0 : 50.0,
+                            radius: i==3? 55.0 : 45.0,
                             child: Center(
                                 child: Text(
                                     "${widget.patient.treatmentDay}/${widget.patient.totalTreatmentLength}",
@@ -262,18 +261,21 @@ class _DashboardOnePageState extends State<DashboardOnePage> {
                                         fontSize: 25)
                                 )
                             )
-                        ) :
-                        Container(
-                            height: 130,
-                            width: 100,
+                        )
+                      ) : (i==2 ? Positioned(
+                        top: 0,
+                        left: 0,
+                        child: Container(
+                            height: (MediaQuery.of(context).size.width),
+                            width: (MediaQuery.of(context).size.width)*0.25,
                             decoration: new BoxDecoration(
-                              shape: BoxShape.rectangle,
-                              border: new Border.all(
-                                color: Colors.transparent,
-                                width: 1.0,
-                              ),
-                              color: i==2 ? Color(0xFF611C61) : Color(
-                                  0xFF0855A7)
+                                shape: BoxShape.rectangle,
+                                border: new Border.all(
+                                  color: Colors.transparent,
+                                  width: 1.0,
+                                ),
+                                color: i==2 ? Color(0xFF611C61) : Color(
+                                    0xFF0855A7)
                             ),
                             child: Center(
                                 child: Column(
@@ -285,8 +287,8 @@ class _DashboardOnePageState extends State<DashboardOnePage> {
                                       i==2 ? "EXERCISES DONE" : "EXERCISES MISSED",
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold
                                       ),
                                     ),
                                     SizedBox(
@@ -305,7 +307,52 @@ class _DashboardOnePageState extends State<DashboardOnePage> {
                                 )
                             )
                         ) ,
-                      ),
+                      ) : Positioned(
+                        top: 0,
+                        right: 0,
+                        child: Container(
+                            height: (MediaQuery.of(context).size.width),
+                            width: (MediaQuery.of(context).size.width)*0.25,
+                            decoration: new BoxDecoration(
+                                shape: BoxShape.rectangle,
+                                border: new Border.all(
+                                  color: Colors.transparent,
+                                  width: 1.0,
+                                ),
+                                color: i==2 ? Color(0xFF611C61) : Color(
+                                    0xFF0855A7)
+                            ),
+                            child: Center(
+                                child: Column(
+                                  children: [
+                                    SizedBox(
+                                      height: 20,
+                                    ),
+                                    Text(
+                                      i==2 ? "EXERCISES DONE" : "EXERCISES MISSED",
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 20,
+                                    ),
+                                    Text(
+                                      i==2 ? "${exercisesDone}/${exercisesDone+exercisesMissed}"
+                                          : "${exercisesMissed}/${exercisesDone+exercisesMissed}",
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 20
+                                      ),
+                                    )
+                                  ],
+                                )
+                            )
+                        ) ,
+                      )),
                       i==1 ? Positioned(
                         top: 5,
                         left: 80,
@@ -582,10 +629,9 @@ class _DashboardOnePageState extends State<DashboardOnePage> {
   }
 }
 
-class DonutPieChart extends StatelessWidget {
+class DonutPieChart extends StatefulWidget {
   final List<charts.Series> seriesList;
   final bool animate;
-  List<LinearSales> dataList;
 
   DonutPieChart(this.seriesList, {this.animate});
 
@@ -599,24 +645,7 @@ class DonutPieChart extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return new charts.PieChart(seriesList,
-              animate: animate,
-              selectionModels: [
-                charts.SelectionModelConfig(
-                    changedListener: (charts.SelectionModel model) {
-                      print(model.selectedSeries[0].domainFn(model.selectedDatum[0].index));
-                      print(model.selectedSeries[0].measureFn(model.selectedDatum[0].index));
-                    }
-                )
-              ],
-              behaviors: [
-                new charts.DomainHighlighter(),
-                new charts.SelectNearest(eventTrigger: charts.SelectionTrigger.tapAndDrag)
-              ],
-              defaultInteractions: true,
-            );
-  }
+  _DonutPieChartState createState() => _DonutPieChartState();
 
   static List<charts.Series<LinearSales, String>> _createSampleData(List<dynamic> apiResponse) {
 
@@ -648,6 +677,120 @@ class DonutPieChart extends StatelessWidget {
         data: data,
       )
     ];
+  }
+}
+
+class _DonutPieChartState extends State<DonutPieChart> {
+  List<LinearSales> dataList;
+  String selectedExercise, selectedCount;
+
+  @override
+  void initState() {
+    super.initState();
+    selectedExercise = "No Exercise Selected";
+    selectedCount = "";
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container (
+        child: Stack(
+        children: [
+          Padding(
+            padding: EdgeInsets.only(top:10, right:80),
+            child: new charts.PieChart(
+              widget.seriesList,
+              animate: widget.animate,
+              selectionModels: [
+                charts.SelectionModelConfig(
+                    changedListener: (charts.SelectionModel model) {
+                      if(model.hasDatumSelection) {
+                        setState(() {
+                          selectedExercise = model.selectedSeries[0].domainFn(model.selectedDatum[0].index).toString();
+                          selectedCount = model.selectedSeries[0].measureFn(model.selectedDatum[0].index).toString();
+                        });
+                      }
+                    }
+                )
+              ],
+              behaviors: [
+                new charts.DomainHighlighter(),
+                new charts.SelectNearest(eventTrigger: charts.SelectionTrigger.tapAndDrag)
+              ],
+              defaultInteractions: true,
+            ),),
+          Container(
+            child: Text('${selectedExercise}\n${selectedCount}', style: TextStyle(fontWeight: FontWeight.bold))
+          ),
+          Positioned(
+            right: 0,
+            child: Column(
+              children: [
+                ToggleButtons(
+                  borderColor: Colors.blueAccent,
+                  fillColor: Colors.blueAccent,
+                  borderWidth: 1,
+                  selectedColor: Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+                      child: Text(
+                        'ASSIGNED',
+                        style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ],
+                  onPressed: (int index) {
+
+                  },
+                  isSelected: [true],
+                ),
+                ToggleButtons(
+                  borderColor: Colors.blueAccent,
+                  fillColor: Colors.blueAccent,
+                  borderWidth: 1,
+                  selectedColor: Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+                      child: Text(
+                        'PATIENT',
+                        style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ],
+                  onPressed: (int index) {
+
+                  },
+                  isSelected: [true],
+                ),
+                ToggleButtons(
+                  borderColor: Colors.transparent,
+                  fillColor: Colors.blueAccent,
+                  borderWidth: 0,
+                  selectedColor: Colors.white,
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+                      child: Text(
+                        'PATIENT\n+\nRELATIVE',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ],
+                  onPressed: (int index) {
+
+                  },
+                  isSelected: [true],
+                ),
+              ],
+            ),
+          )
+        ]
+    ));
   }
 }
 
