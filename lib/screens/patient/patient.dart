@@ -231,140 +231,143 @@ class _DashboardOnePageState extends State<DashboardOnePage> {
       padding: const EdgeInsets.all(16.0),
       sliver: SliverToBoxAdapter(
         child: CarouselSlider(
-          options: CarouselOptions(height: 130.0),
+          options: CarouselOptions(height: 150.0),
           items: [1, 2, 3].map((i){
             return Builder(
               builder: (BuildContext context) {
-                return Container(
-                  width: MediaQuery.of(context).size.width,
-                  margin: EdgeInsets.symmetric(horizontal: 5.0),
-                  decoration: BoxDecoration(
-                      color: Colors.transparent
+                return FittedBox(
+                  child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      margin: EdgeInsets.symmetric(horizontal: 5.0),
+                      decoration: BoxDecoration(
+                          color: Colors.transparent
+                      ),
+                      child: Stack(
+                        alignment: Alignment.topCenter,
+                        children: [
+                          Image(image: AssetImage('assets/Images/b$i.png')),
+                          i==1 ? Positioned(
+                              top: 20,
+                              right: 23,
+                              child: CircleAvatar(
+                                  backgroundColor:(Colors.orange),
+                                  radius: MediaQuery.of(context).size.width * 0.19,
+                                  child: Center(
+                                      child: Text(
+                                          "${widget.patient.treatmentDay}/${widget.patient.totalTreatmentLength}",
+                                          style: TextStyle(color: Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 35)
+                                      )
+                                  )
+                              )
+                          ) : (i==2 ? Positioned(
+                            top: 0,
+                            left: 0,
+                            child: Container(
+                                height: (MediaQuery.of(context).size.width),
+                                width: (MediaQuery.of(context).size.width)*0.35,
+                                decoration: new BoxDecoration(
+                                    shape: BoxShape.rectangle,
+                                    border: new Border.all(
+                                      color: Colors.transparent,
+                                      width: 1.0,
+                                    ),
+                                    color: i==2 ? Color(0xFF611C61) : Color(
+                                        0xFF0855A7)
+                                ),
+                                child: Center(
+                                    child: Column(
+                                      children: [
+                                        SizedBox(
+                                          height: 30,
+                                        ),
+                                        Text(
+                                          i==2 ? "EXERCISES DONE" : "EXERCISES MISSED",
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 20
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          height: 20,
+                                        ),
+                                        Text(
+                                          i==2 ? "${exercisesDone}/${exercisesDone+exercisesMissed}"
+                                              : "${exercisesMissed}/${exercisesDone+exercisesMissed}",
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 20
+                                          ),
+                                        )
+                                      ],
+                                    )
+                                )
+                            ) ,
+                          ) : Positioned(
+                            top: 0,
+                            right: 0,
+                            child: Container(
+                                height: (MediaQuery.of(context).size.width),
+                                width: (MediaQuery.of(context).size.width)*0.35,
+                                decoration: new BoxDecoration(
+                                    shape: BoxShape.rectangle,
+                                    border: new Border.all(
+                                      color: Colors.transparent,
+                                      width: 1.0,
+                                    ),
+                                    color: i==2 ? Color(0xFF611C61) : Color(
+                                        0xFF0855A7)
+                                ),
+                                child: Center(
+                                    child: Column(
+                                      children: [
+                                        SizedBox(
+                                          height: 30,
+                                        ),
+                                        Text(
+                                          i==2 ? "EXERCISES DONE" : "EXERCISES MISSED",
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 20
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          height: 20,
+                                        ),
+                                        Text(
+                                          i==2 ? "${exercisesDone}/${exercisesDone+exercisesMissed}"
+                                              : "${exercisesMissed}/${exercisesDone+exercisesMissed}",
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 20
+                                          ),
+                                        )
+                                      ],
+                                    )
+                                )
+                            ) ,
+                          )),
+                          i==1 ? Positioned(
+                              top: 5,
+                              left: MediaQuery.of(context).size.width*0.3,
+                              child: Text('TREATMENT\nDAYS',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 20
+                                  ))
+                          ) : Container()
+                        ],
+                      )
                   ),
-                  child: Stack(
-                    alignment: Alignment.topCenter,
-                    children: [
-                      Image(image: AssetImage('assets/Images/b$i.png')),
-                      i==1 ? Positioned(
-                        top: 20,
-                        right: 23,
-                        child: CircleAvatar(
-                            backgroundColor: i==1 ?
-                            (Colors.orange) :
-                            (i==2 ? (Color(0xFF611C61)) : (Colors.blue)),
-                            radius: i==3? 55.0 : 45.0,
-                            child: Center(
-                                child: Text(
-                                    "${widget.patient.treatmentDay}/${widget.patient.totalTreatmentLength}",
-                                    style: TextStyle(color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 25)
-                                )
-                            )
-                        )
-                      ) : (i==2 ? Positioned(
-                        top: 0,
-                        left: 0,
-                        child: Container(
-                            height: (MediaQuery.of(context).size.width),
-                            width: (MediaQuery.of(context).size.width)*0.25,
-                            decoration: new BoxDecoration(
-                                shape: BoxShape.rectangle,
-                                border: new Border.all(
-                                  color: Colors.transparent,
-                                  width: 1.0,
-                                ),
-                                color: i==2 ? Color(0xFF611C61) : Color(
-                                    0xFF0855A7)
-                            ),
-                            child: Center(
-                                child: Column(
-                                  children: [
-                                    SizedBox(
-                                      height: 20,
-                                    ),
-                                    Text(
-                                      i==2 ? "EXERCISES DONE" : "EXERCISES MISSED",
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: 20,
-                                    ),
-                                    Text(
-                                      i==2 ? "${exercisesDone}/${exercisesDone+exercisesMissed}"
-                                          : "${exercisesMissed}/${exercisesDone+exercisesMissed}",
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 20
-                                      ),
-                                    )
-                                  ],
-                                )
-                            )
-                        ) ,
-                      ) : Positioned(
-                        top: 0,
-                        right: 0,
-                        child: Container(
-                            height: (MediaQuery.of(context).size.width),
-                            width: (MediaQuery.of(context).size.width)*0.25,
-                            decoration: new BoxDecoration(
-                                shape: BoxShape.rectangle,
-                                border: new Border.all(
-                                  color: Colors.transparent,
-                                  width: 1.0,
-                                ),
-                                color: i==2 ? Color(0xFF611C61) : Color(
-                                    0xFF0855A7)
-                            ),
-                            child: Center(
-                                child: Column(
-                                  children: [
-                                    SizedBox(
-                                      height: 20,
-                                    ),
-                                    Text(
-                                      i==2 ? "EXERCISES DONE" : "EXERCISES MISSED",
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: 20,
-                                    ),
-                                    Text(
-                                      i==2 ? "${exercisesDone}/${exercisesDone+exercisesMissed}"
-                                          : "${exercisesMissed}/${exercisesDone+exercisesMissed}",
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 20
-                                      ),
-                                    )
-                                  ],
-                                )
-                            )
-                        ) ,
-                      )),
-                      i==1 ? Positioned(
-                        top: 5,
-                        left: 80,
-                        child: Text('TREATMENT\nDAYS',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 15
-                        ))
-                      ) : Container()
-                    ],
-                  )
+                  fit: BoxFit.fill,
                 );
               }
             );
@@ -631,15 +634,19 @@ class _DashboardOnePageState extends State<DashboardOnePage> {
 
 class DonutPieChart extends StatefulWidget {
   final List<charts.Series> seriesList;
+  final List<charts.Series> patient;
+  final List<charts.Series> patientRelative;
   final bool animate;
 
-  DonutPieChart(this.seriesList, {this.animate});
+  DonutPieChart(this.seriesList, this.patient, this.patientRelative, {this.animate});
 
   /// Creates a [PieChart] with sample data and no transition.
   factory DonutPieChart.withSampleData(List<dynamic> apiResponse) {
+    List<List<charts.Series>> res = _createSampleData(apiResponse);
     return new DonutPieChart(
-      _createSampleData(apiResponse),
-      // Disable animations for image tests.
+      res[0],
+      res[1],
+      res[2],
       animate: true,
     );
   }
@@ -647,9 +654,11 @@ class DonutPieChart extends StatefulWidget {
   @override
   _DonutPieChartState createState() => _DonutPieChartState();
 
-  static List<charts.Series<LinearSales, String>> _createSampleData(List<dynamic> apiResponse) {
+  static List<List<charts.Series<LinearSales, String>>> _createSampleData(List<dynamic> apiResponse) {
 
     Map map = Map<String, int>();
+    Map map1 = Map<String, int>();
+    Map map2 = Map<String, int>();
 
     var lengthOfList = apiResponse==null ? 0 : apiResponse.length;
 
@@ -659,23 +668,67 @@ class DonutPieChart extends StatefulWidget {
       } else {
         map[apiResponse[i]["exercise_name"].toString().toUpperCase()] = 1;
       }
+      if(apiResponse[i]["marked_by_patient"]==1) {
+        if(map1.containsKey(apiResponse[i]["exercise_name"].toString().toUpperCase())) {
+          map1[apiResponse[i]["exercise_name"].toString().toUpperCase()]++;
+        } else {
+          map1[apiResponse[i]["exercise_name"].toString().toUpperCase()] = 1;
+        }
+      }
+      if(apiResponse[i]["marked_by_patient"]==1 && apiResponse[i]["marked_by_relative"]==1) {
+        if(map2.containsKey(apiResponse[i]["exercise_name"].toString().toUpperCase())) {
+          map2[apiResponse[i]["exercise_name"].toString().toUpperCase()]++;
+        } else {
+          map2[apiResponse[i]["exercise_name"].toString().toUpperCase()] = 1;
+        }
+      }
     }
 
     List<LinearSales>data = [];
+    List<LinearSales>data1 = [];
+    List<LinearSales>data2 = [];
 
     map.forEach((key, value) {
       data.add(LinearSales("${key.toString()[0]}${key.toString().substring(1).toLowerCase()}", value));
     });
 
-    print("Data => ${data}");
+    map1.forEach((key, value) {
+      data1.add(LinearSales("${key.toString()[0]}${key.toString().substring(1).toLowerCase()}", value));
+    });
+
+    map2.forEach((key, value) {
+      data2.add(LinearSales("${key.toString()[0]}${key.toString().substring(1).toLowerCase()}", value));
+    });
+
+    print("Map => ${map}");
+    print("Map1 => ${map1}");
+    print("Map2 => ${map2}");
 
     return [
+      [
       new charts.Series<LinearSales, String>(
         id: 'Exercises',
         domainFn: (LinearSales sales, _) => sales.exercise,
         measureFn: (LinearSales sales, _) => sales.count,
         data: data,
       )
+      ],
+      [
+        new charts.Series<LinearSales, String>(
+          id: 'Exercises1',
+          domainFn: (LinearSales sales, _) => sales.exercise,
+          measureFn: (LinearSales sales, _) => sales.count,
+          data: data1,
+        )
+      ],
+      [
+        new charts.Series<LinearSales, String>(
+          id: 'Exercises2',
+          domainFn: (LinearSales sales, _) => sales.exercise,
+          measureFn: (LinearSales sales, _) => sales.count,
+          data: data2,
+        )
+      ]
     ];
   }
 }
@@ -683,6 +736,9 @@ class DonutPieChart extends StatefulWidget {
 class _DonutPieChartState extends State<DonutPieChart> {
   List<LinearSales> dataList;
   String selectedExercise, selectedCount;
+  bool assigned = true;
+  bool patient = false;
+  bool patientRelative = false;
 
   @override
   void initState() {
@@ -699,7 +755,7 @@ class _DonutPieChartState extends State<DonutPieChart> {
           Padding(
             padding: EdgeInsets.only(top:10, right:80),
             child: new charts.PieChart(
-              widget.seriesList,
+              assigned ? widget.seriesList : (patient ? widget.patient : widget.patientRelative),
               animate: widget.animate,
               selectionModels: [
                 charts.SelectionModelConfig(
@@ -720,72 +776,111 @@ class _DonutPieChartState extends State<DonutPieChart> {
               defaultInteractions: true,
             ),),
           Container(
-            child: Text('${selectedExercise}\n${selectedCount}', style: TextStyle(fontWeight: FontWeight.bold))
+            child: Text(
+                '${selectedExercise}\n${selectedCount}',
+                style: TextStyle(fontWeight: FontWeight.bold)
+            )
           ),
           Positioned(
             right: 0,
             child: Column(
               children: [
-                ToggleButtons(
-                  borderColor: Colors.blueAccent,
-                  fillColor: Colors.blueAccent,
-                  borderWidth: 1,
-                  selectedColor: Colors.white,
-                  borderRadius: BorderRadius.circular(10),
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-                      child: Text(
-                        'ASSIGNED',
-                        style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                Container(
+                    padding: EdgeInsets.all(5),
+                    child:ToggleButtons(
+                      borderColor: Colors.blueAccent,
+                      fillColor: Colors.blueAccent,
+                      borderWidth: 1,
+                      selectedColor: Colors.white,
+                      borderRadius: BorderRadius.circular(10),
+                      children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+                        child: Text(
+                          'ASSIGNED',
+                          style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                        ),
                       ),
-                    ),
-                  ],
-                  onPressed: (int index) {
-
-                  },
-                  isSelected: [true],
-                ),
-                ToggleButtons(
-                  borderColor: Colors.blueAccent,
-                  fillColor: Colors.blueAccent,
-                  borderWidth: 1,
-                  selectedColor: Colors.white,
-                  borderRadius: BorderRadius.circular(10),
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-                      child: Text(
-                        'PATIENT',
-                        style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                  ],
-                  onPressed: (int index) {
-
-                  },
-                  isSelected: [true],
-                ),
-                ToggleButtons(
-                  borderColor: Colors.transparent,
-                  fillColor: Colors.blueAccent,
-                  borderWidth: 0,
-                  selectedColor: Colors.white,
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-                      child: Text(
-                        'PATIENT\n+\nRELATIVE',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                  ],
-                  onPressed: (int index) {
-
-                  },
-                  isSelected: [true],
-                ),
+                      ],
+                      onPressed: (int index) {
+                        if(!assigned) {
+                          setState(() {
+                            assigned = true;
+                            patient = false;
+                            patientRelative = false;
+                            if(widget.seriesList.length==0) {
+                              selectedExercise = "No Data Found";
+                              selectedCount = "";
+                            }
+                          });
+                        }
+                      },
+                      isSelected: [assigned],
+                )),
+                Container(
+                    padding: EdgeInsets.all(5),
+                    child:ToggleButtons(
+                      borderColor: Colors.blueAccent,
+                      fillColor: Colors.blueAccent,
+                      borderWidth: 1,
+                      selectedColor: Colors.white,
+                      borderRadius: BorderRadius.circular(10),
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+                          child: Text(
+                            'PATIENT',
+                            style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ],
+                      onPressed: (int index) {
+                        if(!patient) {
+                          setState(() {
+                            assigned = false;
+                            patient = true;
+                            patientRelative = false;
+                            if(widget.patient.length==0) {
+                              selectedExercise = "No Data Found";
+                              selectedCount = "";
+                            }
+                          });
+                        }
+                      },
+                      isSelected: [patient],
+                    )),
+                Container(
+                    padding: EdgeInsets.all(5),
+                    child:ToggleButtons(
+                      borderColor: Colors.blueAccent,
+                      fillColor: Colors.blueAccent,
+                      borderWidth: 1,
+                      selectedColor: Colors.white,
+                      borderRadius: BorderRadius.circular(10),
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+                          child: Text(
+                            'PATIENT\n+\nRELATIVE',
+                            style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ],
+                      onPressed: (int index) {
+                        if(!patientRelative) {
+                          setState(() {
+                            assigned = false;
+                            patient = false;
+                            patientRelative = true;
+                            if(widget.patientRelative.length==0) {
+                              selectedExercise = "No Data Found";
+                              selectedCount = "";
+                            }
+                          });
+                        }
+                      },
+                      isSelected: [patientRelative],
+                    )),
               ],
             ),
           )

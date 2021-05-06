@@ -41,6 +41,7 @@ class _ListOfPatientsState extends State<ListOfPatients> {
   final _debouncer = Debouncer(milliseconds: 500);
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   List<Patient> _filteredPatients = List();
+  List<Patient> _filteredPatientSide = List();
   int filterOption = 1;
   bool isLoading;
   UserTypeService userService;
@@ -54,6 +55,7 @@ class _ListOfPatientsState extends State<ListOfPatients> {
               () {
             setState((){
               _filteredPatients = patients;
+              isSelected = [true, true, false, false, false, false];
               debugPrint("Showing All Patients");
             });
           }
@@ -63,6 +65,7 @@ class _ListOfPatientsState extends State<ListOfPatients> {
       _debouncer.run(
               () {
             setState((){
+              isSelected = [true, true, false, false, false, false];
               _filteredPatients = patients.where(
                       (p) => (
                       p.isDoingExerciseOnTime
@@ -77,6 +80,7 @@ class _ListOfPatientsState extends State<ListOfPatients> {
       _debouncer.run(
               () {
             setState((){
+              isSelected = [true, true, false, false, false, false];
               _filteredPatients = patients.where(
                       (p) => (
                       !(p.isDoingExerciseOnTime)
@@ -91,6 +95,7 @@ class _ListOfPatientsState extends State<ListOfPatients> {
       _debouncer.run(
               () {
             setState((){
+              isSelected = [true, true, false, false, false, false];
               _filteredPatients = patients.where(
                       (p) => (
                       p.criticalStatus
@@ -105,6 +110,7 @@ class _ListOfPatientsState extends State<ListOfPatients> {
       _debouncer.run(
               () {
             setState((){
+              isSelected = [true, true, false, false, false, false];
               _filteredPatients = patients.where(
                       (p) => (
                       p.treatmentDay==p.totalTreatmentLength
@@ -119,6 +125,7 @@ class _ListOfPatientsState extends State<ListOfPatients> {
       _debouncer.run(
               () {
             setState((){
+              isSelected = [true, true, false, false, false, false];
               _filteredPatients = patients.where(
                       (p) => (
                       p.isMarked
@@ -132,21 +139,99 @@ class _ListOfPatientsState extends State<ListOfPatients> {
     else {
       debugPrint("Invalid Option Found");
     }
+    _filteredPatientSide = _filteredPatients;
+    print("Length ${_filteredPatientSide.length}");
+  }
+
+  void applyTreatmentDayFilter() {
+    print(_filteredPatientSide.length);
+    if(isSelected[1]) {
+      // Show All Treatments
+      _debouncer.run(
+          () {
+            setState(() {
+              _filteredPatients = patients.where((p) => _filteredPatientSide.contains(p)).toList();
+              debugPrint("0-60 Days");
+            });
+          }
+      );
+    }
+    else if(isSelected[2]) {
+      // Show Treatments with 0-15 Days
+      _debouncer.run(
+              () {
+            setState(() {
+              _filteredPatients = patients.where(
+                      (p) => (_filteredPatientSide.contains(p) && p.treatmentDay>=0 && p.treatmentDay<=15)
+              ).toList();
+              debugPrint("0-15 Days");
+            });
+          }
+      );
+    }
+    else if(isSelected[3]) {
+      // Show Treatments with 16-30 Days
+      _debouncer.run(
+              () {
+            setState(() {
+              _filteredPatients = patients.where(
+                      (p) => (_filteredPatientSide.contains(p) && p.treatmentDay>=16 && p.treatmentDay<=30)
+              ).toList();
+              debugPrint("16-30 Days");
+            });
+          }
+      );
+    }
+    else if(isSelected[4]) {
+      // Show Treatments with 31-45 Days
+      _debouncer.run(
+              () {
+            setState(() {
+              _filteredPatients = patients.where(
+                      (p) => (_filteredPatientSide.contains(p) && p.treatmentDay>=31 && p.treatmentDay<=45)
+              ).toList();
+              debugPrint("31-45 Days");
+            });
+          }
+      );
+    }
+    else if(isSelected[5]) {
+      // Show Treatments with 46-60 Days
+      _debouncer.run(
+              () {
+            setState(() {
+              _filteredPatients = patients.where(
+                      (p) => (_filteredPatientSide.contains(p) && p.treatmentDay>=46 && p.treatmentDay<=60)
+              ).toList();
+              debugPrint("46-60 Days");
+            });
+          }
+      );
+    }
   }
 
   List<Patient> getPatientList(List<dynamic>response) {
+    List<int> tD = [];
+    for(int i=0; i<response.length; ++i) {
+      String startDateString = response[i][5].toString();
+      DateTime startDate = DateTime.parse("2021-04-20T00:00:00.000Z");
+      int gamma = DateTime.now().difference(startDate).inDays;
+      tD.add(gamma);
+    }
+  // print(DateTime.now().difference(DateTime.parse("2021-04-20T00:00:00.000Z")).inDays.runtimeType);
   List<Patient> patients = List.generate(response.length, (index) => Patient(
     name: response[index][1] + " " + response[index][2],
-    image: response[index][3],
+    image: response[index][3] == '' ? null : response[index][3],
     operation: response[index][4],
     isDoingExerciseOnTime: (response[index][7] == 1 && response[index][6] == 1) ? true : false,
     criticalStatus: response[index][9] == 1 ? true: false,
     totalTreatmentLength: 60,
-    treatmentDay: response[index][5],
+    treatmentDay: tD[index],
     mobile: response[index][0],
     isMarked: response[index][8] == 1 ? true: false,
     treatmentId: response[index][10]
   ));
+  print(patients);
   return patients;
 }
 
@@ -331,6 +416,7 @@ class _ListOfPatientsState extends State<ListOfPatients> {
                                     else isSelected[i] = i == index;
                                   }
                                 });
+                                applyTreatmentDayFilter();
                               }
                             },
                             isSelected: isSelected,
@@ -340,7 +426,8 @@ class _ListOfPatientsState extends State<ListOfPatients> {
                       ),
                       SizedBox(height: kDefaultPadding),// SizedBox
                       Expanded(
-                          child: ListView.builder(
+                          child: _filteredPatients.length != 0 ?
+                          ListView.builder(
                               itemCount: _filteredPatients==null ? 0: _filteredPatients.length,
                               itemBuilder: (context, index) => PatientCard(
                                   patient: _filteredPatients[index],
@@ -419,6 +506,17 @@ class _ListOfPatientsState extends State<ListOfPatients> {
                                     }
                                 }
                               )
+                          )
+                              :
+                          Container(
+                            padding: EdgeInsets.symmetric(horizontal: 10),
+                            child: const Text(
+                                'No Patient to Show ☹\nCreate a New Patient By Clicking the New Patient Button',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold
+                                ),
+                            ),
                           )
                       )
                     ],
