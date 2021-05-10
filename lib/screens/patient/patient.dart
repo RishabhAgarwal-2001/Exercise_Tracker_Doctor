@@ -43,6 +43,7 @@ class _DashboardOnePageState extends State<DashboardOnePage> {
   bool isLoading;
   int exercisesMissed;
   int exercisesDone;
+  int totalExercisesAssigned;
   List<dynamic> apiResponse, apiResponseStaff;
   TextEditingController _textFieldController1 = TextEditingController();
   TextEditingController _textFieldController2 = TextEditingController();
@@ -57,13 +58,18 @@ class _DashboardOnePageState extends State<DashboardOnePage> {
     });
     String response = await userService.getOnePatient(widget.patient.mobile);
     apiResponse = json.decode(response);
+    print(apiResponse);
+    print("Before ${exercisesMissed}");
     for(var i=0; i<apiResponse.length; i++) {
-      if(apiResponse[i]["marked_by_patient"]==1 && apiResponse[i]["marked_by_relative"]==1) {
+      totalExercisesAssigned++;
+      if(apiResponse[i]["marked_by_patient"]==1) {
         exercisesDone++;
-      } else {
+      }
+      if (apiResponse[i]["marked_by_patient"]==1 && apiResponse[i]["marked_by_relative"]==1) {
         exercisesMissed++;
       }
     }
+    print("After ${exercisesMissed}");
     await getStaffDetails();
     this.setState(() {
       isLoading = false;
@@ -225,6 +231,7 @@ class _DashboardOnePageState extends State<DashboardOnePage> {
     isLoading = false;
     exercisesDone = 0;
     exercisesMissed = 0;
+    totalExercisesAssigned = 0;
     staff1 = "";
     staff2 = "";
     getPatientDetails();
@@ -323,7 +330,7 @@ class _DashboardOnePageState extends State<DashboardOnePage> {
                                           height: 30,
                                         ),
                                         Text(
-                                          i==2 ? "EXERCISES DONE" : "EXERCISES MISSED",
+                                          i==2 ? "EXERCISES DONE PATIENT" : "EXERCISES MISSED RELATIVE",
                                           textAlign: TextAlign.center,
                                           style: TextStyle(
                                               color: Colors.white,
@@ -335,8 +342,8 @@ class _DashboardOnePageState extends State<DashboardOnePage> {
                                           height: 20,
                                         ),
                                         Text(
-                                          i==2 ? "${exercisesDone}/${exercisesDone+exercisesMissed}"
-                                              : "${exercisesMissed}/${exercisesDone+exercisesMissed}",
+                                          i==2 ? "${exercisesDone}/${totalExercisesAssigned}"
+                                              : "${exercisesMissed}/${totalExercisesAssigned}",
                                           style: TextStyle(
                                               color: Colors.white,
                                               fontWeight: FontWeight.bold,
@@ -369,7 +376,7 @@ class _DashboardOnePageState extends State<DashboardOnePage> {
                                           height: 30,
                                         ),
                                         Text(
-                                          i==2 ? "EXERCISES DONE" : "EXERCISES MISSED",
+                                          i==2 ? "EXERCISES DONE PATIENT" : "EXERCISES MARKED RELATIVE",
                                           textAlign: TextAlign.center,
                                           style: TextStyle(
                                               color: Colors.white,
@@ -381,8 +388,8 @@ class _DashboardOnePageState extends State<DashboardOnePage> {
                                           height: 20,
                                         ),
                                         Text(
-                                          i==2 ? "${exercisesDone}/${exercisesDone+exercisesMissed}"
-                                              : "${exercisesMissed}/${exercisesDone+exercisesMissed}",
+                                          i==2 ? "${exercisesDone}/${totalExercisesAssigned}"
+                                              : "${exercisesMissed}/${totalExercisesAssigned}",
                                           style: TextStyle(
                                               color: Colors.white,
                                               fontWeight: FontWeight.bold,

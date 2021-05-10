@@ -254,6 +254,7 @@ class _ListOfPatientsState extends State<ListOfPatients> {
     print(list);
     print(map);
     patients = getPatientList(list);
+    sortPatients();
     _filteredPatients = patients;
     _filteredPatientSide = _filteredPatients;
     print(_filteredPatients);
