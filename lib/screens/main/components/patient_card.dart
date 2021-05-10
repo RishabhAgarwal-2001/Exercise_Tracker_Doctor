@@ -112,7 +112,7 @@ class PatientCard extends StatelessWidget {
                                       ),
                                       children: [
                                         TextSpan(
-                                            text: "${patient.operation}",
+                                            text: "Week: ${1 + (patient.treatmentDay/7).ceil()}",
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .bodyText2

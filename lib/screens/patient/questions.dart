@@ -11,10 +11,10 @@ class Message {
 
 class QuestionsResponse extends StatefulWidget {
 
-  final String mobileNumber;
+  final String mobileNumber, patientName, feedbackDate;
   final int treatmentDay;
 
-  QuestionsResponse(this.mobileNumber, this.treatmentDay);
+  QuestionsResponse(this.mobileNumber, this.treatmentDay, this.patientName, this.feedbackDate);
 
   @override
   QuestionsResponseState createState() => QuestionsResponseState();
@@ -60,7 +60,9 @@ class QuestionsResponseState extends State<QuestionsResponse> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Response to Questions"),
+        title: (widget.feedbackDate=="null" || widget.feedbackDate=="") ?
+        Text("${widget.patientName} - Feedback"):
+        Text("${widget.patientName} - Feedback\nFilled On: ${DateTime.parse(widget.feedbackDate).day}-${DateTime.parse(widget.feedbackDate).month}-${DateTime.parse(widget.feedbackDate).year}"),
       ),
       body: Stack(
         children: [
@@ -69,6 +71,7 @@ class QuestionsResponseState extends State<QuestionsResponse> {
               SizedBox(
                 height: 10.0,
               ),
+              messages.length!=0 ?
               Expanded(
                 child: ListView.separated(
                   physics: BouncingScrollPhysics(),
@@ -81,6 +84,17 @@ class QuestionsResponseState extends State<QuestionsResponse> {
                     if (m.user == 0) return _buildMessageRow(m, current: true);
                     return _buildMessageRow(m, current: false);
                   },
+                ),
+              ):
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 10),
+                child: const Text(
+                  'No Response Received',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20
+                  ),
                 ),
               ),
             ],

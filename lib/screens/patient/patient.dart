@@ -13,10 +13,13 @@ import 'package:exercise_tracker_doctor/screens/patient/patientList.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:charts_flutter/src/text_element.dart' as ChartText;
 import 'package:charts_flutter/src/text_style.dart' as ChartStyle;
+import 'package:url_launcher/url_launcher.dart' as UrlLauncher;
 
 String dailyExerciseTracking = "Daily Exercise Tracking";
 String questionnaire = "Feedback";
 String referees = "Collaborators";
+String callPatient = "Call Patient";
+String messagePatient = "SMS Patient";
 
 class DashboardOnePage extends StatefulWidget {
   // static final String path = "lib/src/pages/dashboard/dash1.dart";
@@ -40,9 +43,10 @@ class _DashboardOnePageState extends State<DashboardOnePage> {
   bool isLoading;
   int exercisesMissed;
   int exercisesDone;
-  List<dynamic> apiResponse;
+  List<dynamic> apiResponse, apiResponseStaff;
   TextEditingController _textFieldController1 = TextEditingController();
   TextEditingController _textFieldController2 = TextEditingController();
+  String staff1, staff2;
   final _formKey1 = GlobalKey<FormState>();
 
 
@@ -60,7 +64,7 @@ class _DashboardOnePageState extends State<DashboardOnePage> {
         exercisesMissed++;
       }
     }
-    // await getStaffDetails();
+    await getStaffDetails();
     this.setState(() {
       isLoading = false;
     });
@@ -100,6 +104,17 @@ class _DashboardOnePageState extends State<DashboardOnePage> {
                         ),
                       ),
                       SizedBox(
+                        height: 5,
+                      ),
+                      Text(
+                        "Enter Pre-Registered Numbers Only",
+                        style: TextStyle(
+                          fontWeight: FontWeight.w300,
+                          fontFamily: "Roboto",
+                          fontSize: 12,
+                        ),
+                      ),
+                      SizedBox(
                         height: 20,
                       ),
                       TextFormField(
@@ -121,19 +136,36 @@ class _DashboardOnePageState extends State<DashboardOnePage> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
                           FlatButton(
-                            onPressed: () {
+                            onPressed: () async {
                               print("Key Pressed");
                               if(_formKey1.currentState.validate()) {
-                                // TODO: Update the Staff Number
-                                // TODO: Create and Update Local Variables
                                 Navigator.of(context).pop();
+                                try {
+                                  setState(() {
+                                    isLoading = true;
+                                  });
+                                  debugPrint("Calling Update API");
+                                  await userService.updateStaffNumber(widget.patient.treatmentId, _textFieldController1.text, _textFieldController2.text);
+                                  debugPrint("Update Call Success... Getting Details");
+                                  await getStaffDetails();
+                                  setState(() {
+                                    isLoading = false;
+                                  });
+                                } catch(err) {
+                                  setState(() {
+                                    isLoading = false;
+                                  });
+                                  debugPrint("Unable to Update or Get Staff");
+                                }
                               }
                             },
                             child: Text("UPDATE"),
                           ),
                           FlatButton(
                             onPressed: () {
-                              // TODO: Reset TextControllers to Original Number
+                              debugPrint("Resetting Controllers");
+                              _textFieldController1.text = staff1;
+                              _textFieldController2.text = staff2;
                               Navigator.of(context).pop();
                             },
                             child: Text("CANCEL"),
@@ -152,6 +184,7 @@ class _DashboardOnePageState extends State<DashboardOnePage> {
   }
 
   String _phoneNumberValidator(String value) {
+    if(value=="") return null;
     String pattern = r'(^(?:[+0]9)?[0-9]{10,12}$)';
     RegExp regExp = new RegExp(pattern);
     if (value.length == 0) {
@@ -166,18 +199,23 @@ class _DashboardOnePageState extends State<DashboardOnePage> {
   Future<void> getStaffDetails() async {
     print('Sending Request For Staff Number');
     String response = await userService.getStaffNumber(widget.patient.treatmentId);
-    print(response);
-    // apiResponse = json.decode(response);
-    // for(var i=0; i<apiResponse.length; i++) {
-    //   if(apiResponse[i]["marked_by_patient"]==1 && apiResponse[i]["marked_by_relative"]==1) {
-    //     exercisesDone++;
-    //   } else {
-    //     exercisesMissed++;
-    //   }
-    // }
-    this.setState(() {
-      isLoading = false;
-    });
+    print('Response = $response');
+    apiResponseStaff = json.decode(response);
+    if(apiResponseStaff.length>=1) {
+      staff1 = apiResponseStaff[0]["mobile_number"];
+      _textFieldController1.text = staff1;
+    } else {
+      staff1 = "";
+      _textFieldController1.text = staff1;
+    }
+    if(apiResponseStaff.length>=2) {
+      staff2 = apiResponseStaff[1]["mobile_number"];
+      _textFieldController2.text = staff2;
+    } else {
+      staff2 = "";
+      _textFieldController2.text = staff2;
+    }
+    print("I am Here");
   }
 
   @override
@@ -187,6 +225,8 @@ class _DashboardOnePageState extends State<DashboardOnePage> {
     isLoading = false;
     exercisesDone = 0;
     exercisesMissed = 0;
+    staff1 = "";
+    staff2 = "";
     getPatientDetails();
   }
 
@@ -508,18 +548,24 @@ class _DashboardOnePageState extends State<DashboardOnePage> {
                               builder: (context) =>
                                   QuestionsResponse(
                                       widget.patient.mobile,
-                                      widget.patient.treatmentDay
+                                      widget.patient.treatmentDay,
+                                      widget.patient.name,
+                                      widget.patient.latestFeedbackDate
                                   ),
                             ),
                           );
                         } else if(activity.title==referees) {
                           _showDialog();
+                        } else if(activity.title==callPatient) {
+                          UrlLauncher.launch('tel://${widget.patient.mobile}');
+                        } else if(activity.title==messagePatient) {
+                          UrlLauncher.launch('sms://${widget.patient.mobile}');
                         }
                       },
                     ),
                     const SizedBox(height: 5.0),
                     Text(
-                      activity.title,
+                      activity.title==questionnaire?'${activity.title}\n(${widget.patient.countFeedbackFilled})':activity.title,
                       textAlign: TextAlign.center,
                       style: TextStyle(
                           fontWeight: FontWeight.bold, fontSize: 14.0),
@@ -905,6 +951,8 @@ class Activity {
 final List<Activity> activities = [
   Activity(title: dailyExerciseTracking, icon: FontAwesomeIcons.listOl),
   Activity(title: questionnaire, icon: FontAwesomeIcons.question),
-  Activity(title: referees, icon: FontAwesomeIcons.users)
+  Activity(title: referees, icon: FontAwesomeIcons.users),
+  Activity(title: callPatient, icon: FontAwesomeIcons.phone),
+  Activity(title: messagePatient, icon: FontAwesomeIcons.facebookMessenger)
 ];
 

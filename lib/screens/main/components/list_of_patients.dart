@@ -213,8 +213,8 @@ class _ListOfPatientsState extends State<ListOfPatients> {
   List<Patient> getPatientList(List<dynamic>response) {
     List<int> tD = [];
     for(int i=0; i<response.length; ++i) {
-      String startDateString = response[i][5].toString();
-      DateTime startDate = DateTime.parse("2021-04-20T00:00:00.000Z");
+      String startDateString = response[i][11].toString();
+      DateTime startDate = DateTime.parse(startDateString);
       int gamma = DateTime.now().difference(startDate).inDays;
       tD.add(gamma);
     }
@@ -229,7 +229,9 @@ class _ListOfPatientsState extends State<ListOfPatients> {
     treatmentDay: tD[index],
     mobile: response[index][0],
     isMarked: response[index][8] == 1 ? true: false,
-    treatmentId: response[index][10]
+    treatmentId: response[index][10],
+    countFeedbackFilled: response[index][13],
+    latestFeedbackDate: response[index][12]
   ));
   print(patients);
   return patients;
@@ -253,6 +255,7 @@ class _ListOfPatientsState extends State<ListOfPatients> {
     print(map);
     patients = getPatientList(list);
     _filteredPatients = patients;
+    _filteredPatientSide = _filteredPatients;
     print(_filteredPatients);
     setState(() {
       isLoading = false;
@@ -263,7 +266,7 @@ class _ListOfPatientsState extends State<ListOfPatients> {
     patients.sort((a, b){
       String x = a.isMarked ? '1' : '0';
       String y = b.isMarked ? '1' : '0';
-      return x.compareTo(y);
+      return y.compareTo(x);
     });
   }
 
@@ -272,6 +275,7 @@ class _ListOfPatientsState extends State<ListOfPatients> {
     super.initState();
     isLoading = false;
     _filteredPatients = patients;
+    _filteredPatientSide = _filteredPatients;
     isSelected = [true, true, false, false, false, false];
     userService = UserTypeService();
     _getPatients().catchError((e){
@@ -436,7 +440,7 @@ class _ListOfPatientsState extends State<ListOfPatients> {
                                       context,
                                       MaterialPageRoute(
                                         builder: (context) =>
-                                            DashboardOnePage(patient: patients[index]),
+                                            DashboardOnePage(patient: _filteredPatients[index]),
                                       ),
                                     );
                                   },
