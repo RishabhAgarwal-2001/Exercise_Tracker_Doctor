@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:exercise_tracker_doctor/screens/patient/questions.dart';
 import 'package:flutter/material.dart';
 import 'package:exercise_tracker_doctor/models/Patient.dart';
@@ -651,13 +652,30 @@ class _DashboardOnePageState extends State<DashboardOnePage> {
   }
 
   Widget _buildAvatar(BuildContext context) {
+    String _defaultPic = "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png";
     return IconButton(
       iconSize: 40,
       padding: EdgeInsets.all(0),
       icon: CircleAvatar(
         backgroundColor: Colors.grey.shade300,
-        child: CircleAvatar(radius: 16, backgroundImage: AssetImage(widget.patient.image !=null ? widget.patient.image : "assets/Images/person8.png")),
-      ),
+        child: CircleAvatar(
+          radius: 16,
+            child: CachedNetworkImage(
+              imageUrl: widget.patient.image.length > 10 ? widget.patient.image : _defaultPic,
+              imageBuilder: (context, imageProvider) => Container(
+                height: 140,
+                width: 140,
+                decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: imageProvider,
+                      fit: BoxFit.cover,
+                    ),
+                    shape: BoxShape.circle
+                ),
+              ),
+              placeholder: (context, url) => CircularProgressIndicator(),
+              errorWidget: (context, url, error) => Icon(Icons.error),
+            ))),
       onPressed: () {},
     );
   }

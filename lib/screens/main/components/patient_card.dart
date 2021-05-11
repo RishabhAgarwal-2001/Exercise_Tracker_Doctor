@@ -4,6 +4,7 @@ import 'package:exercise_tracker_doctor/models/Patient.dart';
 import 'package:badges/badges.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:websafe_svg/websafe_svg.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class PatientCard extends StatelessWidget {
 
@@ -57,6 +58,7 @@ class PatientCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String _defaultPic = "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png";
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: kDefaultPadding),
       child: InkWell(
@@ -96,7 +98,23 @@ class PatientCard extends StatelessWidget {
                                 child: CircleAvatar(
                                   backgroundColor: Colors.transparent,
                                   // TODO: Add Image From API
-                                  backgroundImage: AssetImage((patient.image !=null && patient.image!= "") ? patient.image : "assets/Images/person8.png"),
+                                  child: CachedNetworkImage(
+                                    imageUrl: patient.image.length > 10 ? patient.image : _defaultPic,
+                                    imageBuilder: (context, imageProvider) => Container(
+                                      height: 140,
+                                      width: 140,
+                                      decoration: BoxDecoration(
+                                          image: DecorationImage(
+                                            image: imageProvider,
+                                            fit: BoxFit.cover,
+                                          ),
+                                          shape: BoxShape.circle
+                                      ),
+                                    ),
+                                    placeholder: (context, url) => CircularProgressIndicator(),
+                                    errorWidget: (context, url, error) => Icon(Icons.error),
+                                  )
+                                  // backgroundImage: AssetImage((patient.image !=null && patient.image!= "") ? patient.image : "assets/Images/person8.png"),
                                 ),
                               )
                           ),

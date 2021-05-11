@@ -60,7 +60,7 @@ class QuestionsResponseState extends State<QuestionsResponse> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: (widget.feedbackDate=="null" || widget.feedbackDate=="") ?
+        title: ( messages.length==0 || widget.feedbackDate=="null" || widget.feedbackDate=="") ?
         Text("${widget.patientName} - Feedback"):
         Text("${widget.patientName} - Feedback\nFilled On: ${DateTime.parse(widget.feedbackDate).day}-${DateTime.parse(widget.feedbackDate).month}-${DateTime.parse(widget.feedbackDate).year}"),
       ),

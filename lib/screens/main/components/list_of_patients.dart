@@ -221,7 +221,7 @@ class _ListOfPatientsState extends State<ListOfPatients> {
   // print(DateTime.now().difference(DateTime.parse("2021-04-20T00:00:00.000Z")).inDays.runtimeType);
   List<Patient> patients = List.generate(response.length, (index) => Patient(
     name: response[index][1] + " " + response[index][2],
-    image: response[index][3] == '' ? null : response[index][3],
+    image: response[index][3] == null ? '' : response[index][3],
     operation: response[index][4],
     isDoingExerciseOnTime: (response[index][7] == 1 && response[index][6] == 1) ? true : false,
     criticalStatus: response[index][9] == 1 ? true: false,
